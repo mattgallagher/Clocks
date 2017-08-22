@@ -44,7 +44,7 @@ class Document: NotifyingStore {
 	}
 	
 	func addTimezone(_ identifier: String) {
-		let tz = Timezone(name: String(identifier.split(separator: "/").last ?? Substring(identifier)), identifier: identifier)
+		let tz = Timezone(name: identifier.split(separator: "/").last?.replacingOccurrences(of: "_", with: " ") ?? identifier, identifier: identifier)
 		timezones[tz.uuid] = tz
 		save()
 	}
