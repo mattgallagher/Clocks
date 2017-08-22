@@ -5,30 +5,37 @@
 //  Created by Matt Gallagher on 2017/08/18.
 //  Copyright © 2017 Matt Gallagher. All rights reserved.
 //
+//  Permission to use, copy, modify, and/or distribute this software for any purpose with or without
+//  fee is hereby granted, provided that the above copyright notice and this permission notice
+//  appear in all copies.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+//  SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+//  AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+//  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+//  OF THIS SOFTWARE.
+//
 
 import Foundation
 
-class Document {
-	static let changedNotification = Notification.Name("DocumentChanged")
-	static let shared = Document(url: try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("document.json"))
-	var timezones: [UUID: Timezone] = [:]
-	var history: [Data]
-	var historyIndex: Int?
+class Document: NotifyingStore {
+	static let shortName = "Document"
+	static let shared = Document.constructDefault()
+
 	let url: URL
+	private (set) var timezones: [UUID: Timezone] = [:]
 	
-	init(url: URL) {
+	required init(url: URL) {
 		self.url = url
 		do {
 			let data = try Data(contentsOf: url)
-			history = [data]
-			load(jsonData: data)
+			loadWithoutNotifying(jsonData: data)
 		} catch {
-			history = []
-			timezones = [:]
 		}
 	}
 	
-	func load(jsonData: Data) {
+	func loadWithoutNotifying(jsonData: Data) {
 		do {
 			timezones = try JSONDecoder().decode([UUID: Timezone].self, from: jsonData)
 		} catch {
@@ -60,26 +67,8 @@ class Document {
 		}.map { $0.value })
 	}
 	
-	func seek(_ historyIndex: Int) {
-		if history.indices.contains(historyIndex) {
-			self.historyIndex = historyIndex
-			load(jsonData: history[historyIndex])
-			NotificationCenter.default.post(name: Document.changedNotification, object: self)
-		}
-	}
-	
-	func save() {
-		do {
-			let data = try JSONEncoder().encode(timezones)
-			if let hi = historyIndex, history.indices.contains(hi + 1) {
-				history.removeSubrange((hi + 1)..<history.endIndex)
-			}
-			historyIndex = nil
-			history.append(data)
-			try data.write(to: url)
-			NotificationCenter.default.post(name: Document.changedNotification, object: self)
-		} catch {
-		}
+	func serialized() throws -> Data {
+		return try JSONEncoder().encode(timezones)
 	}
 }
 

@@ -5,11 +5,21 @@
 //  Created by Matt Gallagher on 2017/08/18.
 //  Copyright © 2017 Matt Gallagher. All rights reserved.
 //
+//  Permission to use, copy, modify, and/or distribute this software for any purpose with or without
+//  fee is hereby granted, provided that the above copyright notice and this permission notice
+//  appear in all copies.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+//  SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+//  AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+//  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+//  OF THIS SOFTWARE.
+//
 
 import UIKit
 
 class DetailViewController: UIViewController, UITextFieldDelegate {
-
 	@IBOutlet var nameField: UITextField?
 	@IBOutlet var timeView: TimeDisplayView?
 	let hoursLabel = UILabel()
@@ -18,17 +28,34 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	let keyboardSpacer = KeyboardSizedView()
 	
 	var timer: Timer? = nil
-
-	override func viewDidDisappear(_ animated: Bool) {
+	
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: ViewState.changedNotification, object: nil)
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		timezone = nil
+		timer?.invalidate()
+		timer = nil
+		if animated, ViewState.shared.topLevel.detailView?.uuid != nil {
+			ViewState.shared.updateDetailSelection(uuid: nil)
+		}
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
+			self?.updateTimeDisplay()
+		})
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
 		
+		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
+
 		let timeFont = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)
 		hoursLabel.font = timeFont
 		minutesLabel.font = timeFont
@@ -63,14 +90,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		
 		updateAll()
 	}
-
+	
 	@objc func handleChangeNotification(_ notification: Notification) {
-		guard let t = timezone else { return }
-		if let storeVersion = Document.shared.timezones[t.uuid] {
-			nameField?.text = storeVersion.name
-		} else {
-			timezone = nil
-		}
+		updateAll()
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -79,7 +101,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	func updateAll() {
-		guard let t = timezone else {
+		guard let uuid = ViewState.shared.topLevel.detailView?.uuid, let timezone = Document.shared.timezones[uuid] else {
 			for v in view.subviews {
 				v.isHidden = true
 			}
@@ -89,13 +111,13 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		for v in view.subviews {
 			v.isHidden = false
 		}
-		nameField?.text = t.name
-		navigationItem.title = t.identifier
+		nameField?.text = timezone.name
+		navigationItem.title = timezone.identifier
 		updateTimeDisplay()
 	}
 	
 	func updateTimeDisplay() {
-		guard let t = timezone, let tz = TimeZone(identifier: t.identifier) else {
+		guard let uuid = ViewState.shared.topLevel.detailView?.uuid, let timezone = Document.shared.timezones[uuid], let tz = TimeZone(identifier: timezone.identifier) else {
 			return
 		}
 		
@@ -112,33 +134,15 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	@objc func textChanged(_ notification: Notification) {
-		if var t = timezone, let text = nameField?.text, t.name != text {
-			t.name = text
-			timezone = t
-			Document.shared.updateTimezone(t)
+		if let uuid = ViewState.shared.topLevel.detailView?.uuid, var timezone = Document.shared.timezones[uuid], let text = nameField?.text, timezone.name != text {
+			timezone.name = text
+			Document.shared.updateTimezone(timezone)
 		}
 	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		nameField?.resignFirstResponder()
 		return true
-	}
-	
-	var timezone: Timezone? {
-		didSet {
-			updateAll()
-			if timezone != nil {
-				timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
-					self?.updateTimeDisplay()
-				})
-			} else {
-				timer?.invalidate()
-				timer = nil
-				if let split = splitViewController, split.isCollapsed, let masterViewController = (split.viewControllers.first as? UINavigationController) {
-					masterViewController.popViewController(animated: true)
-				}
-			}
-		}
 	}
 }
 

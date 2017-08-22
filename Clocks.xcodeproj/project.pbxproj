@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C911F3481F495FD400B6E2F3 /* NotifyingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */; };
 		C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */; };
 		C92F21981F46929600AA4F51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21971F46929600AA4F51 /* AppDelegate.swift */; };
 		C92F219A1F46929600AA4F51 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21991F46929600AA4F51 /* MasterViewController.swift */; };
@@ -17,11 +18,14 @@
 		C92F21BC1F46A10000AA4F51 /* SelectTimezoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */; };
 		C92F21BE1F46AEE800AA4F51 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BD1F46AEE800AA4F51 /* Document.swift */; };
 		C92F21C01F46C8B400AA4F51 /* TimeDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BF1F46C8B400AA4F51 /* TimeDisplayView.swift */; };
+		C97FCCA51F4A609800A29B8E /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCCA41F4A609800A29B8E /* SplitViewController.swift */; };
+		C9D4A88F1F4911BF00540A86 /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4A88E1F4911BF00540A86 /* ViewState.swift */; };
 		C9F67E871F47E047009FB127 /* CwlLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F67E861F47E047009FB127 /* CwlLayout.swift */; };
 		C9F67E891F47F82F009FB127 /* KeyboardSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingStore.swift; sourceTree = "<group>"; };
 		C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		C92F21941F46929600AA4F51 /* Clocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92F21971F46929600AA4F51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -34,6 +38,8 @@
 		C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTimezoneViewController.swift; sourceTree = "<group>"; };
 		C92F21BD1F46AEE800AA4F51 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		C92F21BF1F46C8B400AA4F51 /* TimeDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplayView.swift; sourceTree = "<group>"; };
+		C97FCCA41F4A609800A29B8E /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
+		C9D4A88E1F4911BF00540A86 /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
 		C9F67E861F47E047009FB127 /* CwlLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CwlLayout.swift; sourceTree = "<group>"; };
 		C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSizedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,7 +75,9 @@
 			isa = PBXGroup;
 			children = (
 				C92F21BD1F46AEE800AA4F51 /* Document.swift */,
+				C9D4A88E1F4911BF00540A86 /* ViewState.swift */,
 				C92F21971F46929600AA4F51 /* AppDelegate.swift */,
+				C97FCCA41F4A609800A29B8E /* SplitViewController.swift */,
 				C92F21991F46929600AA4F51 /* MasterViewController.swift */,
 				C92F219B1F46929600AA4F51 /* DetailViewController.swift */,
 				C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */,
@@ -89,6 +97,7 @@
 				C9F67E861F47E047009FB127 /* CwlLayout.swift */,
 				C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */,
 				C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */,
+				C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -164,8 +173,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C911F3481F495FD400B6E2F3 /* NotifyingStore.swift in Sources */,
 				C92F21BE1F46AEE800AA4F51 /* Document.swift in Sources */,
 				C92F219C1F46929600AA4F51 /* DetailViewController.swift in Sources */,
+				C9D4A88F1F4911BF00540A86 /* ViewState.swift in Sources */,
 				C92F219A1F46929600AA4F51 /* MasterViewController.swift in Sources */,
 				C92F21981F46929600AA4F51 /* AppDelegate.swift in Sources */,
 				C92F21C01F46C8B400AA4F51 /* TimeDisplayView.swift in Sources */,
@@ -173,6 +184,7 @@
 				C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */,
 				C92F21BC1F46A10000AA4F51 /* SelectTimezoneViewController.swift in Sources */,
 				C9F67E871F47E047009FB127 /* CwlLayout.swift in Sources */,
+				C97FCCA51F4A609800A29B8E /* SplitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
