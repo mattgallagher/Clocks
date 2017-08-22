@@ -22,7 +22,7 @@ import Foundation
 class Document: NotifyingStore {
 	static let shortName = "Document"
 	static let shared = Document.constructDefault()
-	
+
 	let url: URL
 	private (set) var timezones: [UUID: Timezone] = [:]
 	
@@ -64,7 +64,7 @@ class Document: NotifyingStore {
 	var timezonesSortedByKey: [Timezone] {
 		return Array(timezones.lazy.sorted { (left, right) -> Bool in
 			return left.value.name < right.value.name || (left.value.name == right.value.name && left.value.uuid.uuidString < right.value.uuid.uuidString)
-			}.map { $0.value })
+		}.map { $0.value })
 	}
 	
 	func serialized() throws -> Data {
@@ -80,4 +80,3 @@ struct Timezone: Codable {
 		(self.name, self.identifier, self.uuid) = (name, identifier, uuidString.flatMap { UUID(uuidString: $0) } ?? UUID())
 	}
 }
-

@@ -26,7 +26,7 @@ class TimeDisplayView: UIView {
 		components = (0, 0, 0)
 		super.init(frame: frame)
 	}
-	
+ 	
 	required init?(coder aDecoder: NSCoder) {
 		components = (0, 0, 0)
 		super.init(coder: aDecoder)
@@ -63,7 +63,7 @@ class TimeDisplayView: UIView {
 		for i in 0...11 {
 			radialMark(center: center, outerRadius: radius, innerRadius: 0.75 * radius, sixtieths: CGFloat(i) * 5, color: UIColor.lightGray, lineWidth: 1)
 		}
-		
+
 		let border = UIBezierPath(ovalIn: CGRect(x: center.x - 1.0 * radius, y: center.y - 1.0 * radius, width: 2.0 * radius, height: 2.0 * radius))
 		UIColor(white: 0.3, alpha: 1).setStroke()
 		border.lineWidth = small ? 1.0 : 6.0
@@ -73,6 +73,5 @@ class TimeDisplayView: UIView {
 		radialMark(center: center, outerRadius: 0.8 * radius, innerRadius: 0, sixtieths: CGFloat(components.minutes) + CGFloat(components.seconds) / 60, color: UIColor.darkGray, lineWidth: small ? 1.0 : 2.5)
 		radialMark(center: center, outerRadius: 0.9 * radius, innerRadius: 0, sixtieths: CGFloat(components.seconds), color: UIColor.red, lineWidth: small ? 0.5 : 1.0)
 	}
-	
-}
 
+}

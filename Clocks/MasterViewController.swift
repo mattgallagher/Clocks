@@ -27,35 +27,54 @@ class MasterViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		navigationItem.leftBarButtonItem = editButtonItem
+		clearsSelectionOnViewWillAppear = true
+		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButton(_:)))
 
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		handleChangeNotification(Notification(name: Document.changedNotification))
-
-		if let split = splitViewController {
-		    let controllers = split.viewControllers
-		    detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-		}
-	}
-
-	@objc func handleChangeNotification(_ notification: Notification) {
-		sortedTimezones = Document.shared.timezonesSortedByKey
-		tableView.reloadData()
-	}
-
+		NotificationCenter.default.addObserver(self, selector: #selector(handleDocumentNotification(_:)), name: Document.changedNotification, object: nil)
+		handleDocumentNotification(Notification(name: Document.changedNotification))
+		NotificationCenter.default.addObserver(self, selector: #selector(handleViewStateNotification(_:)), name: ViewState.changedNotification, object: nil)
+}
+	
 	override func viewWillAppear(_ animated: Bool) {
-		clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
 		super.viewWillAppear(animated)
 		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
 			self?.updateTimeDisplay()
 		})
-	}
 
+		// Need to reprocess view state here since this is the earliest that we could present the "selectTimezone" view controller
+		handleViewStateNotification(Notification(name: ViewState.changedNotification))
+	}
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		timer?.invalidate()
 		timer = nil
 	}
 	
+	@objc func editButton(_ sender: Any?) {
+		ViewState.shared.updateMasterIsEditing(!ViewState.shared.topLevel.masterView.isEditing)
+	}
+	
+	@IBAction func addButton(_ sender: Any?) {
+		ViewState.shared.updateSelectTimezoneVisible(true)
+	}
+	
+	@objc func handleViewStateNotification(_ notification: Notification) {
+		let state = ViewState.shared.topLevel.masterView
+		if notification.userActionData == nil {
+			tableView?.contentOffset.y = CGFloat(state.masterScrollOffsetY)
+		}
+
+		if tableView.isEditing != state.isEditing {
+			tableView.setEditing(state.isEditing, animated: false)
+			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: state.isEditing ? .done : .edit, target: self, action: #selector(editButton(_:)))
+		}
+	}
+
+	@objc func handleDocumentNotification(_ notification: Notification) {
+		sortedTimezones = Document.shared.timezonesSortedByKey
+		tableView.reloadData()
+	}
+
 	func updateTimeDisplayForView(_ timeDisplay: TimeDisplayView, timezone: Timezone) {
 		guard let tz = TimeZone(identifier: timezone.identifier) else { return }
 		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
@@ -77,26 +96,6 @@ class MasterViewController: UITableViewController {
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
-	}
-
-	// MARK: - Segues
-
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showDetail" {
-		    if let indexPath = tableView.indexPathForSelectedRow {
-		        let timezone = sortedTimezones[indexPath.row]
-		        let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-		        controller.timezone = timezone
-		        controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-		        controller.navigationItem.leftItemsSupplementBackButton = true
-		    }
-		}
-	}
-
-	@IBAction func unwindToMasterViewController(segue: UIStoryboardSegue, sender: Any?) {
-		if let selectedIdentifier = (segue.source as? SelectTimezoneViewController)?.selectedIdentifier {
-			Document.shared.addTimezone(selectedIdentifier)
-		}
 	}
 
 	// MARK: - Table View
@@ -121,6 +120,10 @@ class MasterViewController: UITableViewController {
 		return cell
 	}
 
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		ViewState.shared.updateDetailSelection(uuid: sortedTimezones[indexPath.row].uuid)
+	}
+
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		// Return false if you do not want the specified item to be editable.
 		return true
@@ -133,6 +136,9 @@ class MasterViewController: UITableViewController {
 		    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
 		}
 	}
-
+	
+	override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		ViewState.shared.updateMasterScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+	}
 }
 
