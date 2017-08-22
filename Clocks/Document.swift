@@ -10,7 +10,7 @@ import Foundation
 
 class Document {
 	static let changedNotification = Notification.Name("DocumentChanged")
-	static let shared = Document(url: try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("document.json"))
+	static let shared = Document(url: try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Document.json"))
 	var timezones: [UUID: Timezone] = [:]
 	var history: [Data]
 	var historyIndex: Int?
@@ -37,7 +37,7 @@ class Document {
 	}
 	
 	func addTimezone(_ identifier: String) {
-		let tz = Timezone(name: String(identifier.split(separator: "/").last ?? Substring(identifier)), identifier: identifier)
+		let tz = Timezone(name: identifier.split(separator: "/").last?.replacingOccurrences(of: "_", with: " ") ?? identifier, identifier: identifier)
 		timezones[tz.uuid] = tz
 		save()
 	}
