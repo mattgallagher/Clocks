@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */; };
+		C92A41DF1F4BFEE7005C847F /* NotifyingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92A41DE1F4BFEE7005C847F /* NotifyingStore.swift */; };
 		C92F21981F46929600AA4F51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21971F46929600AA4F51 /* AppDelegate.swift */; };
 		C92F219A1F46929600AA4F51 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21991F46929600AA4F51 /* MasterViewController.swift */; };
 		C92F219C1F46929600AA4F51 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F219B1F46929600AA4F51 /* DetailViewController.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		C92A41DE1F4BFEE7005C847F /* NotifyingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingStore.swift; sourceTree = "<group>"; };
 		C92F21941F46929600AA4F51 /* Clocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92F21971F46929600AA4F51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C92F21991F46929600AA4F51 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				C9F67E861F47E047009FB127 /* CwlLayout.swift */,
 				C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */,
 				C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */,
+				C92A41DE1F4BFEE7005C847F /* NotifyingStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -173,6 +176,7 @@
 				C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */,
 				C92F21BC1F46A10000AA4F51 /* SelectTimezoneViewController.swift in Sources */,
 				C9F67E871F47E047009FB127 /* CwlLayout.swift in Sources */,
+				C92A41DF1F4BFEE7005C847F /* NotifyingStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

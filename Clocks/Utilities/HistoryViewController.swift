@@ -5,6 +5,17 @@
 //  Created by Matt Gallagher on 2017/08/19.
 //  Copyright © 2017 Matt Gallagher. All rights reserved.
 //
+//  Permission to use, copy, modify, and/or distribute this software for any purpose with or without
+//  fee is hereby granted, provided that the above copyright notice and this permission notice
+//  appear in all copies.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+//  SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+//  AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+//  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+//  OF THIS SOFTWARE.
+//
 
 import UIKit
 
@@ -12,6 +23,9 @@ class HistoryViewController: UIViewController {
 	var overlayWindow: UIWindow
 	var slider: UISlider
 	var label: UILabel
+	
+	var documentHistory: [Data] = []
+	var documentHistoryIndex: Int?
 	
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		overlayWindow = UIWindow()
@@ -28,26 +42,43 @@ class HistoryViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	func setWindowFrame() {
+		let screenBounds = UIScreen.main.bounds
+		let height: CGFloat = 16 + 40
+		overlayWindow.frame = CGRect(x: screenBounds.origin.x, y: screenBounds.origin.y + screenBounds.size.height - height, width: screenBounds.size.width, height: height)
+	}
+	
 	override func loadView() {
-		let window = UIApplication.shared.windows.first!
+		setWindowFrame()
 		overlayWindow.backgroundColor = .clear
 		overlayWindow.isOpaque = false
-		overlayWindow.frame = CGRect(x: window.frame.origin.x, y: window.frame.origin.y + window.frame.size.height - 56, width: window.frame.size.width, height: 56)
 		overlayWindow.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-		self.view = UIView(frame: overlayWindow.bounds)
 		overlayWindow.rootViewController = self
-		overlayWindow.makeKeyAndVisible()
 		
-		slider.frame = CGRect(x: 0, y: 0, width: overlayWindow.bounds.size.width, height: overlayWindow.bounds.size.height)
+		let view = UIView(frame: overlayWindow.bounds)
+		
+		slider.frame = CGRect(x: 0, y: 0, width: overlayWindow.bounds.size.width, height: 40)
 		slider.autoresizingMask = [.flexibleWidth]
 		slider.addTarget(self, action: #selector(sliderAction(_:)), for: .valueChanged)
 		slider.minimumValue = 0
 		slider.maximumValue = 1
 		slider.value = 1
 		slider.isEnabled = false
+		
 		label.textAlignment = .center
 		label.textColor = .white
 		
+		view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+		
+		self.view = view
+		
+		applyLayout()
+		
+		overlayWindow.makeKeyAndVisible()
+	}
+	
+	func applyLayout() {
+		setWindowFrame()
 		view.applyLayout(.vertical(marginEdges: .none,
 			.interViewSpace,
 			.horizontal(
@@ -59,33 +90,61 @@ class HistoryViewController: UIViewController {
 			),
 			.interViewSpace
 		))
-		
-		view.backgroundColor = UIColor(white: 0, alpha: 0.5)
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		if let documentData = try? Document.shared.serialized() {
+			documentHistory.append(documentData)
+		}
+		
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		updateDisplay()
+		NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+		
+		updateDisplay(userAction: false)
+	}
+	
+	@objc func deviceOrientationChanged(_ notification: Notification) {
+		setWindowFrame()
+		view.frame = overlayWindow.bounds
 	}
 	
 	@objc func handleChangeNotification(_ notification: Notification) {
-		updateDisplay()
+		let documentData = notification.userActionData
+		if let dd = documentData {
+			if let truncateIndex = documentHistoryIndex, documentHistory.indices.contains(truncateIndex) {
+				documentHistory.removeSubrange((truncateIndex + 1)..<documentHistory.endIndex)
+			}
+			documentHistory.append(dd)
+			documentHistoryIndex = nil
+		}
+		updateDisplay(userAction: notification.userActionData != nil)
 	}
 	
-	func updateDisplay() {
-		let historyCount = Document.shared.history.count
-		let historyIndex = (Document.shared.historyIndex ?? historyCount - 1) + 1
-		label.text = "\(historyIndex)/\(historyCount)"
+	func updateDisplay(userAction: Bool) {
+		let hc = documentHistory.count
+		let hi = (documentHistoryIndex ?? hc - 1) + 1
+		label.text = "\(hi)/\(hc)"
 		
-		slider.maximumValue = Float(historyCount)
-		slider.minimumValue = 0 + (historyCount > 1 ? 1 : 0)
-		slider.value = Float(historyIndex)
-		slider.isEnabled = historyCount > 1
+		if userAction {
+			slider.maximumValue = Float(hc)
+			slider.minimumValue = 0 + (hc > 1 ? 1 : 0)
+			if Int(round(slider.value)) - 1 != hi {
+				slider.value = Float(hi)
+			}
+			slider.isEnabled = hc > 1
+		}
 	}
 	
 	@objc func sliderAction(_ sender: Any?) {
-		Document.shared.seek(Int(slider.value) - 1)
+		if sender as? UISlider === slider {
+			let hi = Int(round(slider.value)) - 1
+			if documentHistoryIndex != hi, documentHistory.indices.contains(hi) {
+				documentHistoryIndex = hi
+				Document.shared.load(jsonData: documentHistory[hi])
+			}
+		}
 	}
 }
+
