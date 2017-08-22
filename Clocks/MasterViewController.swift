@@ -60,15 +60,6 @@ class MasterViewController: UITableViewController {
 	
 	@objc func handleViewStateNotification(_ notification: Notification) {
 		let state = ViewState.shared.topLevel.masterView
-		if state.selectionView != nil, self.presentedViewController == nil, let selectTimezoneViewController = storyboard?.instantiateViewController(withIdentifier: "selectTimezone") {
-			// If we're not present in the window, do nothing (assume the reprocess in `viewWillAppear` will catch anything relevant).
-			if self.view.window != nil {
-				self.present(selectTimezoneViewController, animated: notification.userActionData != nil, completion: nil)
-			}
-		} else if state.selectionView == nil, self.presentedViewController != nil {
-			self.dismiss(animated: notification.userActionData != nil, completion: nil)
-		}
-		
 		if notification.userActionData == nil {
 			tableView?.contentOffset.y = CGFloat(state.masterScrollOffsetY)
 		}

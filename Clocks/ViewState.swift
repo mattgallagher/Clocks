@@ -44,7 +44,7 @@ class ViewState: NotifyingStore {
 	}
 	
 	func updateSelectTimezoneScrollPosition(offsetY: Double) {
-		topLevel.masterView.selectionView?.selectionScrollOffsetY = offsetY
+		topLevel.selectionView?.selectionScrollOffsetY = offsetY
 		save()
 	}
 	
@@ -59,15 +59,15 @@ class ViewState: NotifyingStore {
 	}
 	
 	func updateSelectTimezoneSearchString(_ value: String) {
-		topLevel.masterView.selectionView?.searchText = value
+		topLevel.selectionView?.searchText = value
 		save()
 	}
 	
 	func updateSelectTimezoneVisible(_ visible: Bool) {
-		if visible, topLevel.masterView.selectionView == nil {
-			topLevel.masterView.selectionView = SelectionViewState()
+		if visible, topLevel.selectionView == nil {
+			topLevel.selectionView = SelectionViewState()
 		} else {
-			topLevel.masterView.selectionView = nil
+			topLevel.selectionView = nil
 		}
 		save()
 	}
@@ -80,6 +80,7 @@ class ViewState: NotifyingStore {
 struct TopLevelViewState: Codable {
 	var masterView: MasterViewState
 	var detailView: DetailViewState?
+	var selectionView: SelectionViewState?
 	
 	init() {
 		masterView = MasterViewState()
@@ -88,7 +89,6 @@ struct TopLevelViewState: Codable {
 }
 
 struct MasterViewState: Codable {
-	var selectionView: SelectionViewState?
 	var masterScrollOffsetY: Double = 0
 	var isEditing: Bool = false
 }

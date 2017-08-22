@@ -46,7 +46,7 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 	}
 	
 	@objc func handleViewStateNotification(_ notification: Notification) {
-		if let state = ViewState.shared.topLevel.masterView.selectionView {
+		if let state = ViewState.shared.topLevel.selectionView {
 			if currentFilterString != state.searchText {
 				currentFilterString = state.searchText
 				

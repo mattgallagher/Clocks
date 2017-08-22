@@ -52,7 +52,19 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 	@objc func handleChangeNotification(_ notification: Notification) {
 		guard let dvc = detailViewController, let mvc = masterViewController else { return }
 		let isUserAction = notification.userActionData != nil
-		if let uuid = ViewState.shared.topLevel.detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid == nil {
+		let selectionView = ViewState.shared.topLevel.selectionView
+		if selectionView != nil, self.presentedViewController == nil, let selectTimezoneViewController = storyboard?.instantiateViewController(withIdentifier: "selectTimezone") {
+			// If we're not present in the window, do nothing (assume the reprocess in `viewWillAppear` will catch anything relevant).
+			if self.view.window != nil {
+				self.present(selectTimezoneViewController, animated: isUserAction, completion: nil)
+			}
+		} else if selectionView == nil, self.presentedViewController != nil {
+			self.dismiss(animated: isUserAction, completion: nil)
+		}
+		
+		// In the table view
+		let detailView = ViewState.shared.topLevel.detailView
+		if let uuid = detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid == nil {
 			lastPresentedUuid = uuid
 			
 			if isUserAction {
@@ -62,7 +74,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 					showDetailViewController(dvc, sender: nil)
 				}
 			}
-		} else if ViewState.shared.topLevel.detailView.map({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
+		} else if detailView.map({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
 			lastPresentedUuid = nil
 			if needPopWhenClearing {
 				if mvc.topViewController == dvc {
