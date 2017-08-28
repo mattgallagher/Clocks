@@ -116,11 +116,13 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
 		detailViewController?.topViewController?.navigationItem.leftBarButtonItem = nil
 		needPopWhenClearing = true
-		if ViewState.shared.topLevel.detailView == nil {
+		if let detailView = ViewState.shared.topLevel.detailView {
+			lastPresentedUuid = detailView.uuid
+			return false
+		} else {
 			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
 			return true
 		}
-		return false
 	}
 	
 	func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
