@@ -97,7 +97,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 					}
 				}
 			}
-		} else if detailView.map({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
+		} else if detailView.flatMap({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
 			lastPresentedUuid = nil
 			if needPopWhenClearing {
 				if mvc.topViewController == dvc {
