@@ -19,7 +19,7 @@
 
 import UIKit
 
-class MasterViewController: UITableViewController {
+class MasterViewController: UITableViewController, UIDataSourceModelAssociation {
 	var detailViewController: DetailViewController? = nil
 	var sortedTimezones: [Timezone] = []
 	var timer: Timer? = nil
@@ -134,5 +134,18 @@ class MasterViewController: UITableViewController {
 		}
 	}
 
+    func modelIdentifierForElement(at idx: IndexPath, in view: UIView) -> String? {
+        guard idx.count > 0, sortedTimezones.indices.contains(idx.row) else { return nil }
+        return sortedTimezones[idx.row].uuid.uuidString
+    }
+    
+    func indexPathForElement(withModelIdentifier identifier: String, in view: UIView) -> IndexPath? {
+        for (i, t) in sortedTimezones.enumerated() {
+            if t.uuid.uuidString == identifier {
+                return IndexPath(row: i, section: 0)
+            }
+        }
+        return nil
+    }
 }
 

@@ -151,5 +151,17 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 			}
 		}
 	}
+    
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        coder.encode(timezone?.uuid.uuidString, forKey: "uuidString")
+    }
+    
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        if let uuidString = coder.decodeObject(forKey: "uuidString") as? String, let uuid = UUID(uuidString: uuidString) {
+            timezone = Document.shared.timezones[uuid]
+        }
+    }
 }
 
