@@ -44,34 +44,57 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 		lastPresentedUuid = ViewState.shared.topLevel.detailView?.uuid
 	}
 	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		// Need to reprocess view state here since this is the earliest that we could present the "selectTimezone" view controller
+		updateSelectionViewPresentation(isUserAction: false, completion: nil)
+	}
+	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
 	
 	@objc func handleChangeNotification(_ notification: Notification) {
-		guard let dvc = detailViewController, let mvc = masterViewController else { return }
 		let isUserAction = notification.userActionData != nil
+		
+		updateSelectionViewPresentation(isUserAction: isUserAction) {
+			self.updateDetailViewPresentation(isUserAction: isUserAction)
+		}
+	}
+	
+	func updateSelectionViewPresentation(isUserAction: Bool, completion: (() -> Void)?) {
 		let selectionView = ViewState.shared.topLevel.selectionView
 		if selectionView != nil, self.presentedViewController == nil, let selectTimezoneViewController = storyboard?.instantiateViewController(withIdentifier: "selectTimezone") {
 			// If we're not present in the window, do nothing (assume the reprocess in `viewWillAppear` will catch anything relevant).
 			if self.view.window != nil {
-				self.present(selectTimezoneViewController, animated: isUserAction, completion: nil)
+				self.present(selectTimezoneViewController, animated: isUserAction, completion: completion)
+				return
 			}
 		} else if selectionView == nil, self.presentedViewController != nil {
-			self.dismiss(animated: isUserAction, completion: nil)
+			self.dismiss(animated: isUserAction, completion: completion)
+			return
 		}
-		
+		completion?()
+	}
+	
+	func updateDetailViewPresentation(isUserAction: Bool) {
 		// In the table view
+		guard let dvc = detailViewController, let mvc = masterViewController else { return }
 		let detailView = ViewState.shared.topLevel.detailView
 		if let uuid = detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid == nil {
 			lastPresentedUuid = uuid
 			
-			if isUserAction {
-				showDetailViewController(dvc, sender: mvc)
-			} else {
-				UIView.performWithoutAnimation {
-					showDetailViewController(dvc, sender: nil)
+			// We're not allowed to re-show the detail view if it is already showing so guard against that
+			// It might not be obvious why `self.view.window` is checked but on returning to the window, the `collapseSecondary` delegate function might re-present the detail view controller and we need to avoid illegally presenting the detail view twice.
+			if self.view.window != nil, viewControllers.last != dvc, mvc.topViewController != dvc {
+				if isUserAction {
+					showDetailViewController(dvc, sender: mvc)
+				} else {
+					UIView.performWithoutAnimation {
+						showDetailViewController(dvc, sender: nil)
+					}
 				}
 			}
 		} else if detailView.map({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {

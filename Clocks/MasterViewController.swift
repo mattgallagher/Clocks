@@ -40,9 +40,6 @@ class MasterViewController: UITableViewController {
 		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
 			self?.updateTimeDisplay()
 		})
-
-		// Need to reprocess view state here since this is the earliest that we could present the "selectTimezone" view controller
-		handleViewStateNotification(Notification(name: ViewState.changedNotification))
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {

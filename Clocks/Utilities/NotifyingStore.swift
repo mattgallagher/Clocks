@@ -41,6 +41,9 @@ extension NotifyingStore {
 	
 	func load(jsonData: Data) {
 		loadWithoutNotifying(jsonData: jsonData)
+		
+//		print("Restored \(Self.shortName) to:\n\(String(data: jsonData, encoding: .utf8)!)")
+		
 		NotificationCenter.default.post(name: Self.changedNotification, object: self)
 	}
 	
@@ -48,6 +51,9 @@ extension NotifyingStore {
 		do {
 			let data = try serialized()
 			try data.write(to: url)
+			
+//			print("Changed \(Self.shortName) to:\n\(String(data: data, encoding: .utf8)!)")
+			
 			NotificationCenter.default.post(name: Self.changedNotification, object: self, userInfo: [userActionDataKey: data])
 		} catch {
 			print("Error: \(error)")
