@@ -39,9 +39,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		super.viewDidDisappear(animated)
 		timer?.invalidate()
 		timer = nil
-		if animated, ViewState.shared.topLevel.detailView?.uuid != nil {
-			ViewState.shared.updateDetailSelection(uuid: nil)
-		}
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -54,6 +51,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+
 		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
 
 		let timeFont = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)

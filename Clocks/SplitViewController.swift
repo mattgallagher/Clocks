@@ -19,11 +19,10 @@
 
 import UIKit
 
-class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, UINavigationControllerDelegate {
 	
-	@IBOutlet var masterViewController: UINavigationController?
-	@IBOutlet var detailViewController: UINavigationController?
 	var lastPresentedUuid: UUID?
+	var masterViewController: MasterViewController?
 	
 	// This is a more robust tracking of `isCollapsed`
 	var needPopWhenClearing: Bool = false
@@ -31,17 +30,23 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		detailViewController = viewControllers.last as? UINavigationController
-		masterViewController = viewControllers.first as? UINavigationController
+		masterViewController = (viewControllers.first as? UINavigationController)?.topViewController as? MasterViewController
 		
-		// Override point for customization after application launch.
 		self.preferredDisplayMode = .allVisible
 		self.delegate = self
-		detailViewController?.topViewController?.navigationItem.leftBarButtonItem = displayModeButtonItem
+		(self.viewControllers.last as? UINavigationController)?.topViewController?.navigationItem.leftBarButtonItem = displayModeButtonItem
+		(self.viewControllers.first as? UINavigationController)?.delegate = self
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: ViewState.changedNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
 		lastPresentedUuid = ViewState.shared.topLevel.detailView?.uuid
+	}
+	
+	func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+		// The following logic aims to detect when a collapsed detail view is popped from the navigation stack
+		if animated, navigationController.topViewController is MasterViewController, self.viewControllers.count == 1, ViewState.shared.topLevel.detailView != nil {
+			ViewState.shared.updateDetailSelection(uuid: nil)
+		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -59,6 +64,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 	@objc func handleChangeNotification(_ notification: Notification) {
 		let isUserAction = notification.userActionData != nil
 		
+		// Both the selection view and the detail view have the potential to change whether the master view contorller is visible. We need to carefully ensure one transition completes before the other is handled – otherwise exceptions can occur.
 		updateSelectionViewPresentation(isUserAction: isUserAction) {
 			self.updateDetailViewPresentation(isUserAction: isUserAction)
 		}
@@ -80,54 +86,23 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate 
 	}
 	
 	func updateDetailViewPresentation(isUserAction: Bool) {
-		// In the table view
-		guard let dvc = detailViewController, let mvc = masterViewController else { return }
 		let detailView = ViewState.shared.topLevel.detailView
-		if let uuid = detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid == nil {
+		if let uuid = detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid != uuid {
 			lastPresentedUuid = uuid
-			
-			// We're not allowed to re-show the detail view if it is already showing so guard against that
-			// It might not be obvious why `self.view.window` is checked but on returning to the window, the `collapseSecondary` delegate function might re-present the detail view controller and we need to avoid illegally presenting the detail view twice.
-			if self.view.window != nil, viewControllers.last != dvc, mvc.topViewController != dvc {
-				if isUserAction {
-					showDetailViewController(dvc, sender: mvc)
-				} else {
-					UIView.performWithoutAnimation {
-						showDetailViewController(dvc, sender: nil)
-					}
-				}
-			}
+			masterViewController?.performSegue(withIdentifier: isUserAction ? "detail" : "detailWithoutAnimation", sender: self)
 		} else if detailView.flatMap({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
 			lastPresentedUuid = nil
-			if needPopWhenClearing {
-				if mvc.topViewController == dvc {
-					mvc.popViewController(animated: isUserAction)
-				}
-				
-				// This avoids an animation glitch where the second time the view controller is presented, it is presented at "navigation bar hidden" sizing before "popping" to "navigation bar visible" sizing.
-				if let fvc = dvc.viewControllers.last {
-					dvc.viewControllers.remove(at: dvc.viewControllers.count - 1)
-					dvc.pushViewController(fvc, animated: false)
-				}
+			if let masterNavigationController = viewControllers.first as? UINavigationController, masterNavigationController.topViewController is UINavigationController {
+				masterNavigationController.popViewController(animated: isUserAction)
 			}
 		}
 	}
 	
 	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-		detailViewController?.topViewController?.navigationItem.leftBarButtonItem = nil
-		needPopWhenClearing = true
-		if let detailView = ViewState.shared.topLevel.detailView {
-			lastPresentedUuid = detailView.uuid
-			return false
-		} else {
+		if ViewState.shared.topLevel.detailView == nil {
 			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
 			return true
 		}
-	}
-	
-	func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
-		needPopWhenClearing = false
-		detailViewController?.topViewController?.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-		return nil
+		return false
 	}
 }
