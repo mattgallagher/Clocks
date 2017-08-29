@@ -68,8 +68,13 @@ class MasterViewController: UITableViewController {
 	}
 
 	@objc func handleDocumentNotification(_ notification: Notification) {
+		let previous = sortedTimezones
 		sortedTimezones = Document.shared.timezonesSortedByKey
-		tableView.reloadData()
+		
+		// Avoid reloading data if possible since a reloadData will prevent the scroll position updating correctly.
+		if previous != sortedTimezones {
+			tableView.reloadData()
+		}
 	}
 
 	func updateTimeDisplayForView(_ timeDisplay: TimeDisplayView, timezone: Timezone) {
@@ -136,6 +141,12 @@ class MasterViewController: UITableViewController {
 	
 	override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		ViewState.shared.updateMasterScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+	}
+	
+	override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		if decelerate == false {
+			ViewState.shared.updateMasterScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+		}
 	}
 }
 

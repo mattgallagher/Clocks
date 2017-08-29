@@ -80,3 +80,9 @@ struct Timezone: Codable {
 		(self.name, self.identifier, self.uuid) = (name, identifier, uuidString.flatMap { UUID(uuidString: $0) } ?? UUID())
 	}
 }
+
+extension Timezone: Equatable {
+	static func ==(lhs: Timezone, rhs: Timezone) -> Bool {
+		return lhs.uuid == rhs.uuid && lhs.name == rhs.name
+	}
+}
