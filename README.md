@@ -1,5 +1,5 @@
 # Clocks
-An iOS world-time app written in Swift to demonstrate the benefits of treating view-state as a separate model.
+An iOS world-time app written in Swift to demonstrate the benefits of treating view-state as a separate model. The project requires Swift 4 (tested with Xcode 9 beta 6) since it relies on Swift 4's `Codable` functionality.
 
 This project contains two different branches:
 
