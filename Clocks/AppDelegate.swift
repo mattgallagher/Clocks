@@ -32,20 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 			self.historyViewController = HistoryViewController(nibName: nil, bundle: nil)
 		}
 		
-		// Here's an example of testing a view-state related bug. This triggers a bug when `self.view.window != nil` is commented out in `updateDetailViewPresentation` (assuming the `uuid` matches a `uuid` in the `Document`):
-//		let json1 = """
-//				{"selectionView":{"selectionScrollOffsetY":0,"searchText":""},"masterView":{"masterScrollOffsetY":0,"isEditing":false}}
-//				"""
-//		let json2 = """
-//				{"detailView":{"uuid":"EDECF8BD-FEF9-493F-BCA1-6566FFC6E624"},"masterView":{"masterScrollOffsetY":0,"isEditing":false}}
-//				"""
-//		DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250)) {
-//			ViewState.shared.load(jsonData: json1.data(using: .utf8)!)
-//			DispatchQueue.main.async {
-//				ViewState.shared.load(jsonData: json2.data(using: .utf8)!)
-//			}
-//		}
-
 		return true
 	}
 	
