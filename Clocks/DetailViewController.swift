@@ -100,7 +100,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	func updateAll() {
-		guard let uuid = ViewState.shared.topLevel.detailView?.uuid, let timezone = Document.shared.timezones[uuid] else {
+		guard let uuid = ViewState.shared.splitView.detailView?.uuid, let timezone = Document.shared.timezone(uuid) else {
 			for v in view.subviews {
 				v.isHidden = true
 			}
@@ -116,7 +116,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	func updateTimeDisplay() {
-		guard let uuid = ViewState.shared.topLevel.detailView?.uuid, let timezone = Document.shared.timezones[uuid], let tz = TimeZone(identifier: timezone.identifier) else {
+		guard let uuid = ViewState.shared.splitView.detailView?.uuid, let timezone = Document.shared.timezone(uuid), let tz = TimeZone(identifier: timezone.identifier) else {
 			return
 		}
 		
@@ -133,9 +133,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	@objc func textChanged(_ notification: Notification) {
-		if let uuid = ViewState.shared.topLevel.detailView?.uuid, var timezone = Document.shared.timezones[uuid], let text = nameField?.text, timezone.name != text {
-			timezone.name = text
-			Document.shared.updateTimezone(timezone)
+		if let uuid = ViewState.shared.splitView.detailView?.uuid, let text = nameField?.text {
+			Document.shared.updateTimezone(uuid, newName: text)
 		}
 	}
 

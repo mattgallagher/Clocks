@@ -24,7 +24,7 @@ class ViewState: NotifyingStore {
 	static let shared = ViewState.constructDefault()
 	
 	let url: URL
-	private (set) var topLevel: TopLevelViewState = TopLevelViewState()
+	private (set) var splitView: SplitViewState = SplitViewState()
 	
 	required init(url: URL) {
 		self.url = url
@@ -32,52 +32,52 @@ class ViewState: NotifyingStore {
 	
 	func loadWithoutNotifying(jsonData: Data) {
 		do {
-			topLevel = try JSONDecoder().decode(TopLevelViewState.self, from: jsonData)
+			splitView = try JSONDecoder().decode(SplitViewState.self, from: jsonData)
 		} catch {
-			topLevel = TopLevelViewState()
+			splitView = SplitViewState()
 		}
 	}
 	
-	func updateMasterScrollPosition(offsetY: Double) {
-		topLevel.masterView.masterScrollOffsetY = offsetY
+	func scrollMasterView(offsetY: Double) {
+		splitView.masterView.masterScrollOffsetY = offsetY
 		save()
 	}
 	
-	func updateSelectTimezoneScrollPosition(offsetY: Double) {
-		topLevel.selectionView?.selectionScrollOffsetY = offsetY
+	func scrollSelectionView(offsetY: Double) {
+		splitView.selectionView?.selectionScrollOffsetY = offsetY
 		save()
 	}
 	
-	func updateDetailSelection(uuid: UUID?) {
-		topLevel.detailView = uuid.map { DetailViewState(uuid: $0) }
+	func changeDetailSelection(uuid: UUID?) {
+		splitView.detailView = uuid.map { DetailViewState(uuid: $0) }
 		save()
 	}
 	
-	func updateMasterIsEditing(_ isEditing: Bool) {
-		topLevel.masterView.isEditing = isEditing
+	func changeEditModeOnMaster(_ isEditing: Bool) {
+		splitView.masterView.isEditing = isEditing
 		save()
 	}
 	
-	func updateSelectTimezoneSearchString(_ value: String) {
-		topLevel.selectionView?.searchText = value
+	func selectionViewSearchString(_ value: String) {
+		splitView.selectionView?.searchText = value
 		save()
 	}
 	
-	func updateSelectTimezoneVisible(_ visible: Bool) {
-		if visible, topLevel.selectionView == nil {
-			topLevel.selectionView = SelectionViewState()
+	func changeSelectionViewVisibility(_ visible: Bool) {
+		if visible, splitView.selectionView == nil {
+			splitView.selectionView = SelectionViewState()
 		} else {
-			topLevel.selectionView = nil
+			splitView.selectionView = nil
 		}
 		save()
 	}
 	
 	func serialized() throws -> Data {
-		return try JSONEncoder().encode(topLevel)
+		return try JSONEncoder().encode(splitView)
 	}
 }
 
-struct TopLevelViewState: Codable {
+struct SplitViewState: Codable {
 	var masterView: MasterViewState
 	var detailView: DetailViewState?
 	var selectionView: SelectionViewState?

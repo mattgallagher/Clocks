@@ -46,7 +46,7 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 	}
 	
 	@objc func handleViewStateNotification(_ notification: Notification) {
-		if let state = ViewState.shared.topLevel.selectionView {
+		if let state = ViewState.shared.splitView.selectionView {
 			if currentFilterString != state.searchText {
 				currentFilterString = state.searchText
 				
@@ -71,12 +71,12 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 	}
 	
 	@IBAction func cancel(_ sender: Any?) {
-		ViewState.shared.updateSelectTimezoneVisible(false)
+		ViewState.shared.changeSelectionViewVisibility(false)
 	}
 	
 	func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
 		if currentFilterString != textDidChange {
-			ViewState.shared.updateSelectTimezoneSearchString(textDidChange)
+			ViewState.shared.selectionViewSearchString(textDidChange)
 		}
 	}
 	
@@ -92,7 +92,7 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 		if let indexPath = tableView.indexPathForSelectedRow, filtered.indices.contains(indexPath.row) {
 			Document.shared.addTimezone(filtered[indexPath.row])
 		}
-		ViewState.shared.updateSelectTimezoneVisible(false)
+		ViewState.shared.changeSelectionViewVisibility(false)
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -103,7 +103,7 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 	}
 	
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		ViewState.shared.updateSelectTimezoneScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+		ViewState.shared.scrollSelectionView(offsetY: Double(tableView?.contentOffset.y ?? 0))
 	}
 }
 

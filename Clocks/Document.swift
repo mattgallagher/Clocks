@@ -24,7 +24,7 @@ class Document: NotifyingStore {
 	static let shared = Document.constructDefault()
 
 	let url: URL
-	private (set) var timezones: [UUID: Timezone] = [:]
+	private var timezones: [UUID: Timezone] = [:]
 	
 	required init(url: URL) {
 		self.url = url
@@ -49,16 +49,25 @@ class Document: NotifyingStore {
 		save()
 	}
 	
-	func updateTimezone(_ timezone: Timezone) {
-		if let _ = timezones.removeValue(forKey: timezone.uuid) {
-			timezones[timezone.uuid] = timezone
+	func updateTimezone(_ uuid: UUID, newName: String) {
+		if var t = timezones[uuid] {
+			if t.name == newName {
+				// Don't save or post notifications when the name doesn't actually change
+				return
+			}
+			t.name = newName
+			timezones[uuid] = t
 		}
 		save()
 	}
 	
-	func removeTimezone(_ timezone: Timezone) {
-		timezones.removeValue(forKey: timezone.uuid)
+	func removeTimezone(_ uuid: UUID) {
+		timezones.removeValue(forKey: uuid)
 		save()
+	}
+	
+	func timezone(_ uuid: UUID) -> Timezone? {
+		return timezones[uuid]
 	}
 	
 	var timezonesSortedByKey: [Timezone] {
@@ -73,11 +82,11 @@ class Document: NotifyingStore {
 }
 
 struct Timezone: Codable {
-	var name: String
-	let identifier: String
 	let uuid: UUID
-	init(name: String, identifier: String, uuidString: String? = nil) {
-		(self.name, self.identifier, self.uuid) = (name, identifier, uuidString.flatMap { UUID(uuidString: $0) } ?? UUID())
+	let identifier: String
+	var name: String
+	init(name: String, identifier: String) {
+		(self.name, self.identifier, self.uuid) = (name, identifier, UUID())
 	}
 }
 

@@ -24,9 +24,6 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 	var lastPresentedUuid: UUID?
 	var masterViewController: MasterViewController?
 	
-	// This is a more robust tracking of `isCollapsed`
-	var needPopWhenClearing: Bool = false
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -39,13 +36,13 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: ViewState.changedNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		lastPresentedUuid = ViewState.shared.topLevel.detailView?.uuid
+		lastPresentedUuid = ViewState.shared.splitView.detailView?.uuid
 	}
 	
 	func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 		// The following logic aims to detect when a collapsed detail view is popped from the navigation stack
-		if animated, navigationController.topViewController is MasterViewController, self.viewControllers.count == 1, ViewState.shared.topLevel.detailView != nil {
-			ViewState.shared.updateDetailSelection(uuid: nil)
+		if animated, navigationController.topViewController is MasterViewController, self.viewControllers.count == 1, ViewState.shared.splitView.detailView != nil {
+			ViewState.shared.changeDetailSelection(uuid: nil)
 		}
 	}
 	
@@ -71,7 +68,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 	}
 	
 	func updateSelectionViewPresentation(isUserAction: Bool, completion: (() -> Void)?) {
-		let selectionView = ViewState.shared.topLevel.selectionView
+		let selectionView = ViewState.shared.splitView.selectionView
 		if selectionView != nil, self.presentedViewController == nil, let selectTimezoneViewController = storyboard?.instantiateViewController(withIdentifier: "selectTimezone") {
 			// If we're not present in the window, do nothing (assume the reprocess in `viewWillAppear` will catch anything relevant).
 			if self.view.window != nil {
@@ -86,11 +83,11 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 	}
 	
 	func updateDetailViewPresentation(isUserAction: Bool) {
-		let detailView = ViewState.shared.topLevel.detailView
-		if let uuid = detailView?.uuid, Document.shared.timezones[uuid] != nil, lastPresentedUuid != uuid {
+		let detailView = ViewState.shared.splitView.detailView
+		if let uuid = detailView?.uuid, Document.shared.timezone(uuid) != nil, lastPresentedUuid != uuid {
 			lastPresentedUuid = uuid
 			masterViewController?.performSegue(withIdentifier: isUserAction ? "detail" : "detailWithoutAnimation", sender: self)
-		} else if detailView.flatMap({ Document.shared.timezones[$0.uuid] }) == nil, lastPresentedUuid != nil {
+		} else if detailView.flatMap({ Document.shared.timezone($0.uuid) }) == nil, lastPresentedUuid != nil {
 			lastPresentedUuid = nil
 			if let masterNavigationController = viewControllers.first as? UINavigationController, masterNavigationController.topViewController is UINavigationController {
 				masterNavigationController.popViewController(animated: isUserAction)
@@ -99,7 +96,7 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 	}
 	
 	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-		if ViewState.shared.topLevel.detailView == nil {
+		if ViewState.shared.splitView.detailView == nil {
 			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
 			return true
 		}

@@ -48,15 +48,15 @@ class MasterViewController: UITableViewController {
 	}
 	
 	@objc func editButton(_ sender: Any?) {
-		ViewState.shared.updateMasterIsEditing(!ViewState.shared.topLevel.masterView.isEditing)
+		ViewState.shared.changeEditModeOnMaster(!ViewState.shared.splitView.masterView.isEditing)
 	}
 	
 	@IBAction func addButton(_ sender: Any?) {
-		ViewState.shared.updateSelectTimezoneVisible(true)
+		ViewState.shared.changeSelectionViewVisibility(true)
 	}
 	
 	@objc func handleViewStateNotification(_ notification: Notification) {
-		let state = ViewState.shared.topLevel.masterView
+		let state = ViewState.shared.splitView.masterView
 		if notification.userActionData == nil {
 			tableView?.contentOffset.y = CGFloat(state.masterScrollOffsetY)
 		}
@@ -123,7 +123,7 @@ class MasterViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		ViewState.shared.updateDetailSelection(uuid: sortedTimezones[indexPath.row].uuid)
+		ViewState.shared.changeDetailSelection(uuid: sortedTimezones[indexPath.row].uuid)
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -133,19 +133,19 @@ class MasterViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-		    Document.shared.removeTimezone(sortedTimezones[indexPath.row])
+		    Document.shared.removeTimezone(sortedTimezones[indexPath.row].uuid)
 		} else if editingStyle == .insert {
 		    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
 		}
 	}
 	
 	override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		ViewState.shared.updateMasterScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+		ViewState.shared.scrollMasterView(offsetY: Double(tableView?.contentOffset.y ?? 0))
 	}
 	
 	override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		if decelerate == false {
-			ViewState.shared.updateMasterScrollPosition(offsetY: Double(tableView?.contentOffset.y ?? 0))
+			ViewState.shared.scrollMasterView(offsetY: Double(tableView?.contentOffset.y ?? 0))
 		}
 	}
 }
