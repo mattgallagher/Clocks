@@ -99,7 +99,7 @@ class HistoryViewController: UIViewController {
 			documentHistory.append(documentData)
 		}
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: nil, object: Document.shared)
 		NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
 		
 		updateDisplay(userAction: false)
@@ -111,7 +111,13 @@ class HistoryViewController: UIViewController {
 	}
 	
 	@objc func handleChangeNotification(_ notification: Notification) {
-		let documentData = notification.userActionData
+		if notification.name == notifyingStoreReloadNotification {
+			updateDisplay(userAction: false)
+			return
+		}
+		
+		let documentData = try? Document.shared.serialized()
+		
 		if let dd = documentData {
 			if let truncateIndex = documentHistoryIndex, documentHistory.indices.contains(truncateIndex) {
 				documentHistory.removeSubrange((truncateIndex + 1)..<documentHistory.endIndex)
@@ -119,7 +125,8 @@ class HistoryViewController: UIViewController {
 			documentHistory.append(dd)
 			documentHistoryIndex = nil
 		}
-		updateDisplay(userAction: notification.userActionData != nil)
+		
+		updateDisplay(userAction: true)
 	}
 	
 	func updateDisplay(userAction: Bool) {
@@ -142,9 +149,8 @@ class HistoryViewController: UIViewController {
 			let hi = Int(round(slider.value)) - 1
 			if documentHistoryIndex != hi, documentHistory.indices.contains(hi) {
 				documentHistoryIndex = hi
-				Document.shared.load(jsonData: documentHistory[hi])
+				Document.shared.reloadAndNotify(jsonData: documentHistory[hi])
 			}
 		}
 	}
 }
-

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -117,9 +117,6 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="showDetail" id="6S0-TO-JiA"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -135,6 +132,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="showDetail" id="nuy-mS-6jP"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
@@ -162,7 +162,7 @@
                                             <navigationItem title="Select Timezone" id="sxz-QT-8Qj">
                                                 <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="3zO-JH-ymq">
                                                     <connections>
-                                                        <segue destination="TLB-uF-vHO" kind="unwind" unwindAction="unwindToMasterViewControllerWithSegue:sender:" id="2B7-Bn-7wn"/>
+                                                        <action selector="cancel:" destination="16d-cM-iVv" id="eju-QT-C35"/>
                                                     </connections>
                                                 </barButtonItem>
                                             </navigationItem>
@@ -172,7 +172,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
-                                            <outlet property="delegate" destination="16d-cM-iVv" id="aO1-cZ-FPN"/>
+                                            <outlet property="delegate" destination="16d-cM-iVv" id="sk5-Wk-IEf"/>
                                         </connections>
                                     </searchBar>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="selectionTimezoneTableView" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bTm-r5-lq4">
@@ -187,9 +187,6 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableViewCellContentView>
-                                                <connections>
-                                                    <segue destination="TLB-uF-vHO" kind="unwind" unwindAction="unwindToMasterViewControllerWithSegue:sender:" id="kEp-uz-HQ8"/>
-                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                         <connections>
@@ -210,11 +207,12 @@
                         <viewLayoutGuide key="safeArea" id="0Rs-KO-AkF"/>
                     </view>
                     <connections>
+                        <outlet property="navigationBar" destination="jpn-zR-U0Y" id="Xrm-G3-YWT"/>
+                        <outlet property="searchBar" destination="o2P-fI-DyQ" id="T9K-ti-qTh"/>
                         <outlet property="tableView" destination="bTm-r5-lq4" id="G4e-xg-GTI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="61p-qc-eUh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="TLB-uF-vHO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1477.5999999999999" y="-626.53673163418296"/>
         </scene>
@@ -241,6 +239,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="6S0-TO-JiA"/>
+        <segue reference="nuy-mS-6jP"/>
     </inferredMetricsTieBreakers>
 </document>

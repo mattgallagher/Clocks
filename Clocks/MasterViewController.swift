@@ -20,57 +20,65 @@
 import UIKit
 
 class MasterViewController: UITableViewController, UIDataSourceModelAssociation {
-	var detailViewController: DetailViewController? = nil
+	var observations = [NSObjectProtocol]()
 	var sortedTimezones: [Timezone] = []
 	var timer: Timer? = nil
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		clearsSelectionOnViewWillAppear = true
 		navigationItem.leftBarButtonItem = editButtonItem
-
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		handleChangeNotification(Notification(name: Document.changedNotification))
-
-		if let split = splitViewController {
-		    let controllers = split.viewControllers
-		    detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-		}
-	}
-
-	@objc func handleChangeNotification(_ notification: Notification) {
-		sortedTimezones = Document.shared.timezonesSortedByKey
-		tableView.reloadData()
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
-		super.viewWillAppear(animated)
-		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
-			self?.updateTimeDisplay()
+		observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
+			self?.handleDocumentNotification(timezones: timezones, action: action)
 		})
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] _ in
+			if let s = self, let tv = s.tableView, let indexPaths = tv.indexPathsForVisibleRows {
+				for indexPath in indexPaths {
+					if s.sortedTimezones.indices.contains(indexPath.row), let timeDisplay = tv.cellForRow(at: indexPath)?.viewWithTag(2) as? TimeDisplayView {
+						timeDisplay.updateDisplay(timezone: s.sortedTimezones[indexPath.row])
+					}
+				}
+			}
+		})
+	}
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		timer?.invalidate()
 		timer = nil
 	}
-	
-	func updateTimeDisplayForView(_ timeDisplay: TimeDisplayView, timezone: Timezone) {
-		guard let tz = TimeZone(identifier: timezone.identifier) else { return }
-		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-		calendar.timeZone = tz
-		let dateComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
-		timeDisplay.components = (dateComponents.hour ?? 0, dateComponents.minute ?? 0, dateComponents.second ?? 0)
+
+	func updateSortedTimezones(timezones: Document.DataType) {
+		sortedTimezones = Array(timezones.lazy.sorted { (left, right) -> Bool in
+			return left.value.name < right.value.name || (left.value.name == right.value.name && left.value.uuid.uuidString < right.value.uuid.uuidString)
+		}.map { $0.value })
 	}
-	
-	func updateTimeDisplay() {
-		if let indexPaths = tableView?.indexPathsForVisibleRows {
-			for indexPath in indexPaths {
-				if sortedTimezones.indices.contains(indexPath.row), let timeDisplay = tableView?.cellForRow(at: indexPath)?.viewWithTag(2) as? TimeDisplayView {
-					updateTimeDisplayForView(timeDisplay, timezone: sortedTimezones[indexPath.row])
-				}
+
+	func handleDocumentNotification(timezones: Document.DataType, action: Document.Action?) {
+		switch action {
+		case .added(let uuid)?:
+			updateSortedTimezones(timezones: timezones)
+			let index = sortedTimezones.index { $0.uuid == uuid }!
+			tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+		case .removed(let uuid)?:
+			let index = sortedTimezones.index { $0.uuid == uuid }!
+			updateSortedTimezones(timezones: timezones)
+			tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+		case .updated(let uuid)?:
+			let before = sortedTimezones.index { $0.uuid == uuid }!
+			updateSortedTimezones(timezones: timezones)
+			let after = sortedTimezones.index { $0.uuid == uuid }!
+			if before != after {
+				tableView.moveRow(at: IndexPath(row: before, section: 0), to: IndexPath(row: after, section: 0))
 			}
+			tableView.reloadRows(at: [IndexPath(row: after, section: 0)], with: .none)
+		case .none:
+			updateSortedTimezones(timezones: timezones)
+			tableView.reloadData()
 		}
 	}
 
@@ -86,16 +94,10 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 		    if let indexPath = tableView.indexPathForSelectedRow {
 		        let timezone = sortedTimezones[indexPath.row]
 		        let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-		        controller.timezone = timezone
+		        controller.uuid = timezone.uuid
 		        controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 		        controller.navigationItem.leftItemsSupplementBackButton = true
 		    }
-		}
-	}
-
-	@IBAction func unwindToMasterViewController(segue: UIStoryboardSegue, sender: Any?) {
-		if let selectedIdentifier = (segue.source as? SelectTimezoneViewController)?.selectedIdentifier {
-			Document.shared.addTimezone(selectedIdentifier)
 		}
 	}
 
@@ -108,6 +110,10 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return sortedTimezones.count
 	}
+	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		performSegue(withIdentifier: "showDetail", sender: tableView)
+	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -116,7 +122,7 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 		(cell.viewWithTag(1) as? UILabel)?.text = timezone.name
 		
 		if let timeDisplay = cell.viewWithTag(2) as? TimeDisplayView {
-			updateTimeDisplayForView(timeDisplay, timezone: timezone)
+			timeDisplay.updateDisplay(timezone: timezone)
 		}
 		return cell
 	}
@@ -128,7 +134,7 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-		    Document.shared.removeTimezone(sortedTimezones[indexPath.row])
+			Document.shared.removeTimezone(sortedTimezones[indexPath.row].uuid)
 		} else if editingStyle == .insert {
 		    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
 		}

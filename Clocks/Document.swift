@@ -19,13 +19,26 @@
 
 import Foundation
 
-class Document: NotifyingStore {
-	static let shortName = "Document"
-	static let shared = Document.constructDefault()
+struct Timezone: Codable {
+	let uuid: UUID
+	let identifier: String
+	var name: String
+	init(name: String, identifier: String) {
+		(self.name, self.identifier, self.uuid) = (name, identifier, UUID())
+	}
+}
+
+class Document {
+	enum Action {
+		case added(UUID)
+		case updated(UUID)
+		case removed(UUID)
+	}
+	
+	static let shared = Document(url: Document.defaultUrlForShared)
 	
 	let url: URL
-	private (set) var timezones: [UUID: Timezone] = [:]
-	
+	private var timezones: [UUID: Timezone] = [:]
 	required init(url: URL) {
 		self.url = url
 		do {
@@ -35,36 +48,28 @@ class Document: NotifyingStore {
 		}
 	}
 	
-	func loadWithoutNotifying(jsonData: Data) {
-		do {
-			timezones = try JSONDecoder().decode([UUID: Timezone].self, from: jsonData)
-		} catch {
-			timezones = [:]
-		}
-	}
-	
 	func addTimezone(_ identifier: String) {
 		let tz = Timezone(name: identifier.split(separator: "/").last?.replacingOccurrences(of: "_", with: " ") ?? identifier, identifier: identifier)
 		timezones[tz.uuid] = tz
-		save()
+		commitAction(Action.added(tz.uuid))
 	}
 	
-	func updateTimezone(_ timezone: Timezone) {
-		if let _ = timezones.removeValue(forKey: timezone.uuid) {
-			timezones[timezone.uuid] = timezone
+	func updateTimezone(_ uuid: UUID, newName: String) {
+		if var t = timezones[uuid] {
+			if t.name == newName {
+				// Don't save or post notifications when the name doesn't actually change
+				return
+			}
+			t.name = newName
+			timezones[uuid] = t
+			commitAction(Action.updated(uuid))
 		}
-		save()
 	}
 	
-	func removeTimezone(_ timezone: Timezone) {
-		timezones.removeValue(forKey: timezone.uuid)
-		save()
-	}
-	
-	var timezonesSortedByKey: [Timezone] {
-		return Array(timezones.lazy.sorted { (left, right) -> Bool in
-			return left.value.name < right.value.name || (left.value.name == right.value.name && left.value.uuid.uuidString < right.value.uuid.uuidString)
-			}.map { $0.value })
+	func removeTimezone(_ uuid: UUID) {
+		if let _ = timezones.removeValue(forKey: uuid) {
+			commitAction(Action.removed(uuid))
+		}
 	}
 	
 	func serialized() throws -> Data {
@@ -72,12 +77,16 @@ class Document: NotifyingStore {
 	}
 }
 
-struct Timezone: Codable {
-	var name: String
-	let identifier: String
-	let uuid: UUID
-	init(name: String, identifier: String, uuidString: String? = nil) {
-		(self.name, self.identifier, self.uuid) = (name, identifier, uuidString.flatMap { UUID(uuidString: $0) } ?? UUID())
+extension Document: NotifyingStore {
+	static let shortName = "Document"
+	var persistToUrl: URL? { return url }
+	typealias DataType = [UUID: Timezone]
+	var content: [UUID : Timezone] { return timezones }
+	func loadWithoutNotifying(jsonData: Data) {
+		do {
+			timezones = try JSONDecoder().decode(DataType.self, from: jsonData)
+		} catch {
+		}
 	}
 }
 

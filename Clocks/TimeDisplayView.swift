@@ -20,20 +20,30 @@
 import UIKit
 
 class TimeDisplayView: UIView {
-	var components: (hours: Int, minutes: Int, seconds: Int) { didSet { setNeedsDisplay() } }
+	var components: DateComponents { didSet { setNeedsDisplay() } }
 	
 	override init(frame: CGRect) {
-		components = (0, 0, 0)
+		components = DateComponents(hour: 0, minute: 0, second: 0)
 		super.init(frame: frame)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
-		components = (0, 0, 0)
+		components = DateComponents(hour: 0, minute: 0, second: 0)
 		super.init(coder: aDecoder)
 	}
 	
 	override func layoutSubviews() {
 		self.setNeedsDisplay()
+	}
+	
+	@discardableResult
+	func updateDisplay(timezone: Timezone) -> DateComponents {
+		guard let tz = TimeZone(identifier: timezone.identifier) else { return DateComponents() }
+		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+		calendar.timeZone = tz
+		let dateComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
+		self.components = dateComponents
+		return dateComponents
 	}
 	
 	func radialMark(center: CGPoint, outerRadius: CGFloat, innerRadius: CGFloat, sixtieths: CGFloat, color: UIColor, lineWidth: CGFloat) {
@@ -69,10 +79,8 @@ class TimeDisplayView: UIView {
 		border.lineWidth = small ? 1.0 : 6.0
 		border.stroke()
 		
-		radialMark(center: center, outerRadius: 0.5 * radius, innerRadius: 0, sixtieths: 5 * CGFloat(components.hours) + CGFloat(components.minutes) / 12 + CGFloat(components.seconds) / 720, color: UIColor.black, lineWidth: small ? 2.0 : 4.0)
-		radialMark(center: center, outerRadius: 0.8 * radius, innerRadius: 0, sixtieths: CGFloat(components.minutes) + CGFloat(components.seconds) / 60, color: UIColor.darkGray, lineWidth: small ? 1.0 : 2.5)
-		radialMark(center: center, outerRadius: 0.9 * radius, innerRadius: 0, sixtieths: CGFloat(components.seconds), color: UIColor.red, lineWidth: small ? 0.5 : 1.0)
+		radialMark(center: center, outerRadius: 0.5 * radius, innerRadius: 0, sixtieths: 5 * CGFloat(components.hour ?? 0) + CGFloat(components.minute ?? 0) / 12 + CGFloat(components.second ?? 0) / 720, color: UIColor.black, lineWidth: small ? 2.0 : 4.0)
+		radialMark(center: center, outerRadius: 0.8 * radius, innerRadius: 0, sixtieths: CGFloat(components.minute ?? 0) + CGFloat(components.second ?? 0) / 60, color: UIColor.darkGray, lineWidth: small ? 1.0 : 2.5)
+		radialMark(center: center, outerRadius: 0.9 * radius, innerRadius: 0, sixtieths: CGFloat(components.second ?? 0), color: UIColor.red, lineWidth: small ? 0.5 : 1.0)
 	}
-	
 }
-

@@ -20,7 +20,27 @@
 import UIKit
 
 class DetailViewController: UIViewController, UITextFieldDelegate {
-
+	var observations = [NSObjectProtocol]()
+	var uuid: UUID? {
+		didSet {
+			observations.removeAll()
+			observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
+				guard let s = self else { return }
+				if let uuid = s.uuid {
+					if let tz = document[uuid] {
+						s.timezone = tz
+					} else {
+						s.uuid = nil
+					}
+				} else {
+					s.timezone = nil
+				}
+				s.updateAll()
+			})
+		}
+	}
+	private var timezone: Timezone?
+	
 	@IBOutlet var nameField: UITextField?
 	@IBOutlet var timeView: TimeDisplayView?
 	let hoursLabel = UILabel()
@@ -29,40 +49,39 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	let keyboardSpacer = KeyboardSizedView()
 	
 	var timer: Timer? = nil
-
-	override func viewDidDisappear(_ animated: Bool) {
+	
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		timezone = nil
+		timer?.invalidate()
+		timer = nil
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
+			self?.updateTimeDisplay()
+		})
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
 		
-		let timeFont = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)
-		hoursLabel.font = timeFont
-		minutesLabel.font = timeFont
-		secondsLabel.font = timeFont
-		let leftColon = UILabel()
-		leftColon.font = timeFont
-		leftColon.text = ":"
-		let rightColon = UILabel()
-		rightColon.font = timeFont
-		rightColon.text = ":"
+		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
 		
 		self.applyLayout(
 			.vertical(
 				align: .center,
 				.sizedView(timeView!, LayoutSize(
 					length: .equalTo(constant: 300, priority: LayoutDimension.PriorityDefaultMid),
-					breadth: (.equalTo(ratio: 1.0), relativeToLength: true))
-				),
+					breadth: (.equalTo(ratio: 1.0), relativeToLength: true)
+				)),
 				.horizontal(
 					.view(hoursLabel),
-					.view(leftColon),
+					.view(UILabel.timeFontLabel(text: ":")),
 					.view(minutesLabel),
-					.view(rightColon),
+					.view(UILabel.timeFontLabel(text: ":")),
 					.view(secondsLabel)
 				),
 				.interViewSpace,
@@ -74,16 +93,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		
 		updateAll()
 	}
-
-	@objc func handleChangeNotification(_ notification: Notification) {
-		guard let t = timezone else { return }
-		if let storeVersion = Document.shared.timezones[t.uuid] {
-			nameField?.text = storeVersion.name
-		} else {
-			timezone = nil
-		}
-	}
-
+	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
@@ -106,62 +116,49 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	func updateTimeDisplay() {
-		guard let t = timezone, let tz = TimeZone(identifier: t.identifier) else {
+		guard let tz = timezone, let tv = timeView else {
 			return
 		}
 		
-		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-		calendar.timeZone = tz
-		let dateComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
-		hoursLabel.text = "\(dateComponents.hour ?? 0)"
-		minutesLabel.text = "\((dateComponents.minute ?? 0) < 10 ? "0" : "")\(dateComponents.minute ?? 0)"
-		secondsLabel.text = "\((dateComponents.second ?? 0) < 10 ? "0" : "")\(dateComponents.second ?? 0)"
-		
-		if let tdv = timeView {
-			tdv.components = (dateComponents.hour ?? 0, dateComponents.minute ?? 0, dateComponents.second ?? 0)
-		}
+		let dateComponents = tv.updateDisplay(timezone: tz)
+		hoursLabel.text = String(format: "%ld", dateComponents.hour!)
+		minutesLabel.text = String(format: "%02ld", dateComponents.minute!)
+		secondsLabel.text = String(format: "%02ld", dateComponents.second!)
 	}
 	
 	@objc func textChanged(_ notification: Notification) {
-		if var t = timezone, let text = nameField?.text, t.name != text {
-			t.name = text
-			timezone = t
-			Document.shared.updateTimezone(t)
+		if let uuid = self.uuid, let text = nameField?.text {
+			Document.shared.updateTimezone(uuid, newName: text)
 		}
 	}
-
+	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		nameField?.resignFirstResponder()
 		return true
 	}
 	
-	var timezone: Timezone? {
-		didSet {
-			updateAll()
-			if timezone != nil {
-				timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (t) in
-					self?.updateTimeDisplay()
-				})
+	override func encodeRestorableState(with coder: NSCoder) {
+		super.encodeRestorableState(with: coder)
+		coder.encode(uuid?.uuidString, forKey: "uuidString")
+	}
+	
+	override func decodeRestorableState(with coder: NSCoder) {
+		super.decodeRestorableState(with: coder)
+		if let uuidString = coder.decodeObject(forKey: "uuidString") as? String, let uuid = UUID(uuidString: uuidString) {
+			if Document.shared.content[uuid] != nil {
+				self.uuid = uuid
 			} else {
-				timer?.invalidate()
-				timer = nil
-				if let split = splitViewController, split.isCollapsed, let masterViewController = (split.viewControllers.first as? UINavigationController) {
-					masterViewController.popViewController(animated: true)
-				}
+				self.uuid = nil
 			}
 		}
 	}
-    
-    override func encodeRestorableState(with coder: NSCoder) {
-        super.encodeRestorableState(with: coder)
-        coder.encode(timezone?.uuid.uuidString, forKey: "uuidString")
-    }
-    
-    override func decodeRestorableState(with coder: NSCoder) {
-        super.decodeRestorableState(with: coder)
-        if let uuidString = coder.decodeObject(forKey: "uuidString") as? String, let uuid = UUID(uuidString: uuidString) {
-            timezone = Document.shared.timezones[uuid]
-        }
-    }
 }
 
+extension UILabel {
+	static func timeFontLabel(text: String = "") -> UILabel {
+		let result = UILabel()
+		result.text = text
+		result.font = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+		return result
+	}
+}
