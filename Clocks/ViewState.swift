@@ -19,48 +19,35 @@
 
 import Foundation
 
-class ViewState: NotifyingStore {
-	static let shortName = "ViewState"
-	static let shared = ViewState.constructDefault()
-	
-	let url: URL
-	private (set) var splitView: SplitViewState = SplitViewState()
-	
-	required init(url: URL) {
-		self.url = url
-	}
-	
-	func loadWithoutNotifying(jsonData: Data) {
-		do {
-			splitView = try JSONDecoder().decode(SplitViewState.self, from: jsonData)
-		} catch {
-			splitView = SplitViewState()
-		}
-	}
-	
+class ViewState {
+	static let shared = ViewState()
+	private var splitView: SplitViewState = SplitViewState()
+	required init() {}
+
 	func scrollMasterView(offsetY: Double) {
 		splitView.masterView.masterScrollOffsetY = offsetY
-		save()
+		commitAction(MasterViewState.Action.scrolled)
 	}
 	
 	func scrollSelectionView(offsetY: Double) {
 		splitView.selectionView?.selectionScrollOffsetY = offsetY
-		save()
+		commitAction(SelectionViewState.Action.scrolled)
 	}
 	
 	func changeDetailSelection(uuid: UUID?) {
 		splitView.detailView = uuid.map { DetailViewState(uuid: $0) }
-		save()
+		commitAction(SplitViewState.Action.changedDetail)
 	}
 	
-	func changeEditModeOnMaster(_ isEditing: Bool) {
-		splitView.masterView.isEditing = isEditing
-		save()
+	func toggleEditModeOnMaster() {
+		splitView.masterView.isEditing = !splitView.masterView.isEditing
+		commitAction(MasterViewState.Action.changedEditMode)
 	}
 	
 	func selectionViewSearchString(_ value: String) {
+		guard splitView.selectionView?.searchText != value else { return }
 		splitView.selectionView?.searchText = value
-		save()
+		commitAction(SelectionViewState.Action.changedSearchString)
 	}
 	
 	func changeSelectionViewVisibility(_ visible: Bool) {
@@ -69,7 +56,7 @@ class ViewState: NotifyingStore {
 		} else {
 			splitView.selectionView = nil
 		}
-		save()
+		commitAction(SplitViewState.Action.selectionViewVisibility)
 	}
 	
 	func serialized() throws -> Data {
@@ -77,7 +64,25 @@ class ViewState: NotifyingStore {
 	}
 }
 
+extension ViewState: NotifyingStore {
+	static let shortName = "ViewState"
+	typealias DataType = SplitViewState
+	var persistToUrl: URL? { return nil }
+	var content: DataType { get { return splitView } }
+	func loadWithoutNotifying(jsonData: Data) {
+		do {
+			splitView = try JSONDecoder().decode(DataType.self, from: jsonData)
+		} catch {
+		}
+	}
+}
+
 struct SplitViewState: Codable {
+	enum Action {
+		case selectionViewVisibility
+		case changedDetail
+	}
+	
 	var masterView: MasterViewState
 	var detailView: DetailViewState?
 	var selectionView: SelectionViewState?
@@ -89,11 +94,21 @@ struct SplitViewState: Codable {
 }
 
 struct MasterViewState: Codable {
+	enum Action {
+		case scrolled
+		case changedEditMode
+	}
+	
 	var masterScrollOffsetY: Double = 0
 	var isEditing: Bool = false
 }
 
 struct SelectionViewState: Codable {
+	enum Action {
+		case scrolled
+		case changedSearchString
+	}
+	
 	var selectionScrollOffsetY: Double = 0
 	var searchText: String = ""
 }

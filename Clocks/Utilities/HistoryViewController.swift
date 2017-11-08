@@ -147,8 +147,8 @@ class HistoryViewController: UIViewController {
 			}
 			viewStateHistoryIndex = nil
 			documentHistoryIndex = nil
-			Document.shared.load(jsonData: documentHistory[documentHistory.count - 1])
-			ViewState.shared.load(jsonData: viewStateHistory[viewStateHistory.count - 1])
+			Document.shared.reloadAndNotify(jsonData: documentHistory[documentHistory.count - 1])
+			ViewState.shared.reloadAndNotify(jsonData: viewStateHistory[viewStateHistory.count - 1])
 		}
 	}
 	
@@ -162,8 +162,8 @@ class HistoryViewController: UIViewController {
 			viewStateHistory.append(viewStateData)
 		}
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: ViewState.changedNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: nil, object: Document.shared)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: nil, object: ViewState.shared)
 		NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
 
 		updateDisplay(userAction: false)
@@ -175,15 +175,14 @@ class HistoryViewController: UIViewController {
 	}
 	
 	@objc func handleChangeNotification(_ notification: Notification) {
-		var documentData: Data?
-		var viewStateData: Data?
-		if notification.name == Document.changedNotification {
-			documentData = notification.userActionData
-			viewStateData = try? ViewState.shared.serialized()
-		} else if notification.name == ViewState.changedNotification {
-			documentData = try? Document.shared.serialized()
-			viewStateData = notification.userActionData
+		if notification.name == notifyingStoreReloadNotification {
+			updateDisplay(userAction: false)
+			return
 		}
+
+		let documentData = try? Document.shared.serialized()
+		let viewStateData = try? ViewState.shared.serialized()
+
 		if let dd = documentData, let vsd = viewStateData {
 			if let truncateIndex = documentHistoryIndex, documentHistory.indices.contains(truncateIndex) {
 				documentHistory.removeSubrange((truncateIndex + 1)..<documentHistory.endIndex)
@@ -197,7 +196,8 @@ class HistoryViewController: UIViewController {
 			viewStateHistory.append(vsd)
 			viewStateHistoryIndex = nil
 		}
-		updateDisplay(userAction: notification.userActionData != nil)
+		
+		updateDisplay(userAction: true)
 	}
 	
 	func updateDisplay(userAction: Bool) {
@@ -233,17 +233,21 @@ class HistoryViewController: UIViewController {
 			let hi = Int(round(slider.value)) - 1
 			if documentHistoryIndex != hi, documentHistory.indices.contains(hi) {
 				documentHistoryIndex = hi
-				Document.shared.load(jsonData: documentHistory[hi])
+				Document.shared.loadWithoutNotifying(jsonData: documentHistory[hi])
 				if !checkbox.isOn {
 					viewStateHistoryIndex = hi
-					ViewState.shared.load(jsonData: viewStateHistory[hi])
+					ViewState.shared.loadWithoutNotifying(jsonData: viewStateHistory[hi])
+				}
+				Document.shared.postReloadNotification(jsonData: documentHistory[hi])
+				if !checkbox.isOn {
+					ViewState.shared.postReloadNotification(jsonData: viewStateHistory[hi])
 				}
 			}
 		} else {
 			let hi = Int(round(secondSlider.value)) - 1
 			if viewStateHistoryIndex != hi, viewStateHistory.indices.contains(hi) {
 				viewStateHistoryIndex = hi
-				ViewState.shared.load(jsonData: viewStateHistory[hi])
+				ViewState.shared.reloadAndNotify(jsonData: viewStateHistory[hi])
 			}
 		}
 	}

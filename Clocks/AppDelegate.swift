@@ -66,13 +66,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	}
 	
 	func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
-		coder.encode(try? ViewState.shared.serialized(), forKey: "viewState")
+		coder.encode(try? ViewState.shared.serialized(), forKey: .viewStateKey)
 	}
 	
 	func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-		if let data = coder.decodeObject(forKey: "viewState") as? Data {
-			ViewState.shared.load(jsonData: data)
+		if let data = coder.decodeObject(forKey: .viewStateKey) as? Data {
+			ViewState.shared.reloadAndNotify(jsonData: data)
 		}
 	}
 }
 
+extension String {
+	static let viewStateKey = "viewState"
+}

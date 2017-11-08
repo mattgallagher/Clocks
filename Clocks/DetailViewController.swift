@@ -20,20 +20,18 @@
 import UIKit
 
 class DetailViewController: UIViewController, UITextFieldDelegate {
+	var observations = [NSObjectProtocol]()
+	var state: DetailViewState?
+	var timezone: Timezone?
+	
 	@IBOutlet var nameField: UITextField?
 	@IBOutlet var timeView: TimeDisplayView?
-	let hoursLabel = UILabel()
-	let minutesLabel = UILabel()
-	let secondsLabel = UILabel()
+	let hoursLabel = UILabel.timeFontLabel()
+	let minutesLabel = UILabel.timeFontLabel()
+	let secondsLabel = UILabel.timeFontLabel()
 	let keyboardSpacer = KeyboardSizedView()
 	
 	var timer: Timer? = nil
-	
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Document.changedNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: ViewState.changedNotification, object: nil)
-	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
@@ -52,32 +50,31 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		super.viewDidLoad()
 		
 		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-
+		
 		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
-
-		let timeFont = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)
-		hoursLabel.font = timeFont
-		minutesLabel.font = timeFont
-		secondsLabel.font = timeFont
-		let leftColon = UILabel()
-		leftColon.font = timeFont
-		leftColon.text = ":"
-		let rightColon = UILabel()
-		rightColon.font = timeFont
-		rightColon.text = ":"
+		observations += CollectionOfOne(ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
+			guard let s = self else { return }
+			s.state = state.detailView
+			s.updateAll()
+		})
+		observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
+			guard let s = self, let uuid = s.state?.uuid, let tz = document[uuid] else { return }
+			s.timezone = tz
+			s.updateAll()
+		})
 		
 		self.applyLayout(
 			.vertical(
 				align: .center,
 				.sizedView(timeView!, LayoutSize(
 					length: .equalTo(constant: 300, priority: LayoutDimension.PriorityDefaultMid),
-					breadth: (.equalTo(ratio: 1.0), relativeToLength: true))
-				),
+					breadth: (.equalTo(ratio: 1.0), relativeToLength: true)
+				)),
 				.horizontal(
 					.view(hoursLabel),
-					.view(leftColon),
+					.view(UILabel.timeFontLabel(text: ":")),
 					.view(minutesLabel),
-					.view(rightColon),
+					.view(UILabel.timeFontLabel(text: ":")),
 					.view(secondsLabel)
 				),
 				.interViewSpace,
@@ -90,17 +87,13 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		updateAll()
 	}
 	
-	@objc func handleChangeNotification(_ notification: Notification) {
-		updateAll()
-	}
-
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
 	
 	func updateAll() {
-		guard let uuid = ViewState.shared.splitView.detailView?.uuid, let timezone = Document.shared.timezone(uuid) else {
+		guard let tz = timezone else {
 			for v in view.subviews {
 				v.isHidden = true
 			}
@@ -110,37 +103,39 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		for v in view.subviews {
 			v.isHidden = false
 		}
-		nameField?.text = timezone.name
-		navigationItem.title = timezone.identifier
+		nameField?.text = tz.name
+		navigationItem.title = tz.identifier
 		updateTimeDisplay()
 	}
 	
 	func updateTimeDisplay() {
-		guard let uuid = ViewState.shared.splitView.detailView?.uuid, let timezone = Document.shared.timezone(uuid), let tz = TimeZone(identifier: timezone.identifier) else {
+		guard let tz = timezone, let tv = timeView else {
 			return
 		}
 		
-		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-		calendar.timeZone = tz
-		let dateComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
-		hoursLabel.text = "\(dateComponents.hour ?? 0)"
-		minutesLabel.text = "\((dateComponents.minute ?? 0) < 10 ? "0" : "")\(dateComponents.minute ?? 0)"
-		secondsLabel.text = "\((dateComponents.second ?? 0) < 10 ? "0" : "")\(dateComponents.second ?? 0)"
-		
-		if let tdv = timeView {
-			tdv.components = (dateComponents.hour ?? 0, dateComponents.minute ?? 0, dateComponents.second ?? 0)
-		}
+		let dateComponents = tv.updateDisplay(timezone: tz)
+		hoursLabel.text = String(format: "%ld", dateComponents.hour!)
+		minutesLabel.text = String(format: "%02ld", dateComponents.minute!)
+		secondsLabel.text = String(format: "%02ld", dateComponents.second!)
 	}
 	
 	@objc func textChanged(_ notification: Notification) {
-		if let uuid = ViewState.shared.splitView.detailView?.uuid, let text = nameField?.text {
+		if let uuid = state?.uuid, let text = nameField?.text {
 			Document.shared.updateTimezone(uuid, newName: text)
 		}
 	}
-
+	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		nameField?.resignFirstResponder()
 		return true
 	}
 }
 
+extension UILabel {
+	static func timeFontLabel(text: String = "") -> UILabel {
+		let result = UILabel()
+		result.text = text
+		result.font = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+		return result
+	}
+}
