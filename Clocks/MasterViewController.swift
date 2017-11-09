@@ -101,6 +101,8 @@ class MasterViewController: UITableViewController {
 			updateSortedTimezones(timezones: timezones)
 			if previousTimezones != sortedTimezones.map { $0.uuid } {
 				tableView.reloadData()
+			} else if let indexPaths = tableView.indexPathsForVisibleRows {
+				tableView.reloadRows(at: indexPaths, with: .none)
 			}
 		}
 	}
