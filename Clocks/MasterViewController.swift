@@ -29,9 +29,9 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 		
 		clearsSelectionOnViewWillAppear = true
 		navigationItem.leftBarButtonItem = editButtonItem
-		observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
+		observations += Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
 			self?.handleDocumentNotification(timezones: timezones, action: action)
-		})
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

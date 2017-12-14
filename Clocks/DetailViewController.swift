@@ -24,7 +24,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 	var uuid: UUID? {
 		didSet {
 			observations.removeAll()
-			observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
+			observations += Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
 				guard let s = self else { return }
 				if let uuid = s.uuid {
 					if let tz = document[uuid] {
@@ -36,7 +36,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 					s.timezone = nil
 				}
 				s.updateAll()
-			})
+			}
 		}
 	}
 	private var timezone: Timezone?

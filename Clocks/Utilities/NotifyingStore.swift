@@ -33,7 +33,7 @@ protocol NotifyingStore: class {
 	func reloadAndNotify(jsonData: Data)
 	func serialized() throws -> Data
 	func commitAction<T>(_ changeValue: T)
-	func addObserver<T>(actionType: T.Type, _ callback: @escaping (DataType, T?) -> ()) -> NSObjectProtocol
+	func addObserver<T>(actionType: T.Type, _ callback: @escaping (DataType, T?) -> ()) -> [NSObjectProtocol]
 }
 
 extension NotifyingStore {
@@ -65,7 +65,7 @@ extension NotifyingStore {
 		return try JSONEncoder().encode(content)
 	}
 	
-	func addObserver<T>(actionType: T.Type, _ callback: @escaping (DataType, T?) -> ()) -> NSObjectProtocol {
+	func addObserver<T>(actionType: T.Type, _ callback: @escaping (DataType, T?) -> ()) -> [NSObjectProtocol] {
 		let first = NotificationCenter.default.addObserver(forName: Notification.Name(String(describing: T.self)), object: self, queue: nil) { [weak self] n in
 			if let change = n.userInfo?[notifyingStoreUserActionKey] as? T, let s = self {
 				callback(s.content, change)
@@ -76,7 +76,7 @@ extension NotifyingStore {
 			callback(s.content, nil)
 		}
 		callback(content, nil)
-		return [first, second] as NSArray
+		return [first, second]
 	}
 	
 	func commitAction<T>(_ changeValue: T) {
