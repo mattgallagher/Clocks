@@ -52,16 +52,16 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
-		observations += CollectionOfOne(ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
+		observations += ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
 			guard let s = self else { return }
 			s.state = state.detailView
 			s.updateAll()
-		})
-		observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
+		}
+		observations += Document.shared.addObserver(actionType: Document.Action.self) { [weak self] document, action in
 			guard let s = self, let uuid = s.state?.uuid, let tz = document[uuid] else { return }
 			s.timezone = tz
 			s.updateAll()
-		})
+		}
 		
 		self.applyLayout(
 			.vertical(

@@ -39,10 +39,10 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 		))
 		filtered = timezones
 		
-		observations += CollectionOfOne(ViewState.shared.addObserver(actionType: SelectionViewState.Action.self) { [weak self] state, action in
+		observations += ViewState.shared.addObserver(actionType: SelectionViewState.Action.self) { [weak self] state, action in
 			guard let sv = state.selectionView else { return }
 			self?.handleViewStateNotification(state: sv, action: action)
-		})
+		}
 	}
 	
 	func updateForSearchString(_ string: String) {

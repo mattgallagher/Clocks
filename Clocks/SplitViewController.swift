@@ -43,12 +43,12 @@ class SplitViewController: UISplitViewController, UISplitViewControllerDelegate,
 		
 		// Must delay this to here since it is the earliest that `present` transitions can occur
 		if observations.count == 0 {
-			observations += CollectionOfOne(ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
+			observations += ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
 				self?.handleViewStateNotification(state: state, action: action)
-			})
-			observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
+			}
+			observations += Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
 				self?.handleDocumentNotification(timezones: timezones, action: action)
-			})
+			}
 		}
 	}
 	

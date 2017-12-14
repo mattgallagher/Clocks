@@ -28,12 +28,12 @@ class MasterViewController: UITableViewController {
 		super.viewDidLoad()
 		
 		clearsSelectionOnViewWillAppear = true
-		observations += CollectionOfOne(ViewState.shared.addObserver(actionType: MasterViewState.Action.self) { [weak self] state, action in
+		observations += ViewState.shared.addObserver(actionType: MasterViewState.Action.self) { [weak self] state, action in
 			self?.handleViewStateNotification(state: state.masterView, action: action)
-		})
-		observations += CollectionOfOne(Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
+		}
+		observations += Document.shared.addObserver(actionType: Document.Action.self) { [weak self] timezones, action in
 			self?.handleDocumentNotification(timezones: timezones, action: action)
-		})
+		}
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
