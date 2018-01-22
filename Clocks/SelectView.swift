@@ -51,8 +51,9 @@ fileprivate func tableView(_ select: SelectState, _ split: SplitState, _ doc: Do
 		.cellConstructor -- { reuseIdentifier, cellData in
 			TableViewCell(.textLabel -- Label(.text -- cellData))
 		},
-		.tableData -- select.search.map { $0.lowercased() }.map { value in
-			TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
+		.tableData -- select.search.map { text in
+			let value = text.lowercased()
+			return TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
 				value.isEmpty || str.lowercased().range(of: value) != nil
 			}.tableData()
 		},
