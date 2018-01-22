@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		C907D5732015C8DF00C72137 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9BB0CC3200B2CCE0062FB08 /* Main.storyboard */; };
+		C907D5752015C9B000C72137 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C93A89A81FEDEB2A0039A23E /* LaunchScreen.storyboard */; };
 		C93A89991FEDEB290039A23E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A89981FEDEB290039A23E /* main.swift */; };
 		C93A899B1FEDEB290039A23E /* SplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A899A1FEDEB290039A23E /* SplitView.swift */; };
 		C93A899D1FEDEB290039A23E /* MasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A899C1FEDEB290039A23E /* MasterView.swift */; };
@@ -161,6 +163,7 @@
 			buildPhases = (
 				C93A89811FEDEB290039A23E /* Sources */,
 				C93A89821FEDEB290039A23E /* CopyFiles */,
+				C907D5722015C8D700C72137 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -271,6 +274,18 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C907D5722015C8D700C72137 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C907D5732015C8DF00C72137 /* Main.storyboard in Resources */,
+				C907D5752015C9B000C72137 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		C93A89861FEDEB290039A23E /* ShellScript */ = {
