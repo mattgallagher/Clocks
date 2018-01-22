@@ -28,14 +28,6 @@ struct SelectState: StateContainer {
 		firstRow = Var(nil)
 	}
 	var childValues: [StateContainer] { return [search, firstRow] }
-	
-	var tableData: Signal<TableData<String>> {
-		return search.map { $0.lowercased() }.map { value in
-			TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
-				value.isEmpty || str.lowercased().range(of: value) != nil
-			}.tableData()
-		}
-	}
 }
 
 func selectViewController(_ select: SelectState, _ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConstructor {
@@ -55,10 +47,14 @@ func selectViewController(_ select: SelectState, _ split: SplitState, _ doc: Doc
 
 fileprivate func tableView(_ select: SelectState, _ split: SplitState, _ doc: DocumentAdapter) -> TableView<String> {
 	return TableView<String>(
-		.tableData -- select.tableData,
 		.cellIdentifier -- { rowDescription in .textRowIdentifier },
 		.cellConstructor -- { reuseIdentifier, cellData in
 			TableViewCell(.textLabel -- Label(.text -- cellData))
+		},
+		.tableData -- select.search.map { $0.lowercased() }.map { value in
+			TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
+				value.isEmpty || str.lowercased().range(of: value) != nil
+			}.tableData()
 		},
 		.visibleRowsChanged -- updateFirstRow(select.firstRow),
 		.scrollToRow -- select.firstRow.restoreFirstRow(),
@@ -97,7 +93,7 @@ fileprivate func searchBar(_ select: SelectState) -> SearchBarConstructor {
 	)
 }
 
-extension String {
+fileprivate extension String {
 	static let selectTimezone = NSLocalizedString("Select Timezone", comment: "")
 	static let searchTimezones = NSLocalizedString("Search timezones...", comment: "")
 	static let textRowIdentifier = "TextRow"

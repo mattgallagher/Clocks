@@ -60,14 +60,14 @@ func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCon
 	)
 }
 
-private func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
+fileprivate  func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack -- [masterViewController(split, doc)]
 	)
 }
 
-private func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
+fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack -- split.detail
@@ -79,7 +79,7 @@ private func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter
 	)
 }
 
-func navBar() -> NavigationBar {
+fileprivate func navBar() -> NavigationBar {
 	return NavigationBar(
 		.isTranslucent -- false,
 		.barTintColor -- .barTint,
@@ -88,7 +88,7 @@ func navBar() -> NavigationBar {
 	)
 }
 
-func emptyDetailViewController(_ split: SplitState) -> ViewControllerConstructor {
+fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControllerConstructor {
 	return ViewController(
 		.view -- View(
 			.backgroundColor -- UIColor(white: 0.95, alpha: 1.0),

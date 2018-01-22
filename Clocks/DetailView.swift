@@ -55,7 +55,7 @@ func detailViewController(_ detail: DetailState, _ split: SplitState, _ doc: Doc
 	)
 }
 
-func detailLayout(timeDisplay: ViewConstructor, hourLabel: ViewConstructor, hourSpace: ViewConstructor, minutesLabel: ViewConstructor, minutesSpace: ViewConstructor, secondsLabel: ViewConstructor, nameField: ViewConstructor) -> Signal<Layout> {
+fileprivate func detailLayout(timeDisplay: ViewConstructor, hourLabel: ViewConstructor, hourSpace: ViewConstructor, minutesLabel: ViewConstructor, minutesSpace: ViewConstructor, secondsLabel: ViewConstructor, nameField: ViewConstructor) -> Signal<Layout> {
 	return keyboardHeight().map { height in
 		Layout.vertical(
 			align: .center,
@@ -85,7 +85,7 @@ func detailLayout(timeDisplay: ViewConstructor, hourLabel: ViewConstructor, hour
 	}
 }
 
-func keyboardHeight() -> Signal<CGFloat> {
+fileprivate func keyboardHeight() -> Signal<CGFloat> {
 	return Signal<CGFloat>.merge(
 		Signal.notifications(name: .UIKeyboardWillHide).map { _ in 0 },
 		Signal.notifications(name: .UIKeyboardWillShow).map {
@@ -94,14 +94,14 @@ func keyboardHeight() -> Signal<CGFloat> {
 	).continuous(initialValue: 0)
 }
 
-func timeLabel(_ dateComponents: Signal<Row>, _ keyPath: KeyPath<DateComponents, Int?>, _ format: String) -> Label {
+fileprivate func timeLabel(_ dateComponents: Signal<Row>, _ keyPath: KeyPath<DateComponents, Int?>, _ format: String) -> Label {
 	return Label(
 		.font -- .monospacedDigitSystemFont(ofSize: 24, weight: .regular),
 		.text -- dateComponents.map { String(format: format, $0.current[keyPath: keyPath]!) }
 	)
 }
 
-func timeSpacer() -> Label {
+fileprivate func timeSpacer() -> Label {
 	return Label(
 		.font -- .monospacedDigitSystemFont(ofSize: 24, weight: .regular),
 		.text -- ":"

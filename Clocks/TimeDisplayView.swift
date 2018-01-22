@@ -35,7 +35,7 @@ class TimeDisplay: ViewConstructor {
 	}
 }
 
-class TimeDisplayView: UIView {
+fileprivate class TimeDisplayView: UIView {
 	var components: DateComponents { didSet { setNeedsDisplay() } }
 	
 	override init(frame: CGRect) {

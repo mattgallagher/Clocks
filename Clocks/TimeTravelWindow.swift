@@ -19,7 +19,7 @@
 
 import CwlViews
 
-struct TimeTravelState {
+fileprivate struct TimeTravelState {
 	let history = StackAdapter<(viewStateSnapshot: Data, docSnapshot: Data)>()
 	let offset = Var<Int>(-1)
 	
@@ -131,7 +131,7 @@ fileprivate func label(_ state: TimeTravelState) -> Label {
 	)
 }
 
-func windowFrame() -> Signal<CGRect> {
+fileprivate func windowFrame() -> Signal<CGRect> {
 	return Signal.notifications(name: .UIDeviceOrientationDidChange, object: nil).map { _ in
 		let screenBounds = UIScreen.main.bounds
 		let height: CGFloat = 16 + 40

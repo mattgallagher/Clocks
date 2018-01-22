@@ -22,7 +22,7 @@ import CwlViews
 private let doc = DocumentAdapter(document: Document())
 private let viewState = Var(SplitState())
 
-func application(_ viewState: Var<SplitState>, _ doc: DocumentAdapter) -> Application {
+fileprivate func application(_ viewState: Var<SplitState>, _ doc: DocumentAdapter) -> Application {
 	return Application(
 		.window -- Window(
 			.rootViewController -- viewState.map { split in
