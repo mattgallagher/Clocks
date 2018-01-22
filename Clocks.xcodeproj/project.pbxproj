@@ -6,138 +6,251 @@
 	objectVersion = 48;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C93A89871FEDEB290039A23E /* FetchDependencies */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C93A89B01FEDEB2A0039A23E /* Build configuration list for PBXAggregateTarget "FetchDependencies" */;
+			buildPhases = (
+				C93A89861FEDEB290039A23E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = FetchDependencies;
+			productName = FetchDependencies;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		C911F3481F495FD400B6E2F3 /* NotifyingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */; };
-		C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */; };
-		C92F21981F46929600AA4F51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21971F46929600AA4F51 /* AppDelegate.swift */; };
-		C92F219A1F46929600AA4F51 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21991F46929600AA4F51 /* MasterViewController.swift */; };
-		C92F219C1F46929600AA4F51 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F219B1F46929600AA4F51 /* DetailViewController.swift */; };
-		C92F219F1F46929600AA4F51 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C92F219D1F46929600AA4F51 /* Main.storyboard */; };
-		C92F21A11F46929600AA4F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C92F21A01F46929600AA4F51 /* Assets.xcassets */; };
-		C92F21A41F46929600AA4F51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C92F21A21F46929600AA4F51 /* LaunchScreen.storyboard */; };
-		C92F21BC1F46A10000AA4F51 /* SelectTimezoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */; };
-		C92F21BE1F46AEE800AA4F51 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BD1F46AEE800AA4F51 /* Document.swift */; };
-		C92F21C01F46C8B400AA4F51 /* TimeDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F21BF1F46C8B400AA4F51 /* TimeDisplayView.swift */; };
-		C97FCCA51F4A609800A29B8E /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FCCA41F4A609800A29B8E /* SplitViewController.swift */; };
-		C9D4A88F1F4911BF00540A86 /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D4A88E1F4911BF00540A86 /* ViewState.swift */; };
-		C9F67E871F47E047009FB127 /* CwlLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F67E861F47E047009FB127 /* CwlLayout.swift */; };
-		C9F67E891F47F82F009FB127 /* KeyboardSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */; };
+		C93A89991FEDEB290039A23E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A89981FEDEB290039A23E /* main.swift */; };
+		C93A899B1FEDEB290039A23E /* SplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A899A1FEDEB290039A23E /* SplitView.swift */; };
+		C93A899D1FEDEB290039A23E /* MasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A899C1FEDEB290039A23E /* MasterView.swift */; };
+		C93A899F1FEDEB290039A23E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A899E1FEDEB290039A23E /* DetailView.swift */; };
+		C93A89A11FEDEB2A0039A23E /* DocumentAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A89A01FEDEB2A0039A23E /* DocumentAdapter.swift */; };
+		C93A89A31FEDEB2A0039A23E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A89A21FEDEB2A0039A23E /* Document.swift */; };
+		C93A89AB1FEDEB2A0039A23E /* CwlUtils.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C93A89A51FEDEB2A0039A23E /* CwlUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C93A89AC1FEDEB2A0039A23E /* CwlSignal.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C93A89A61FEDEB2A0039A23E /* CwlSignal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C93A89AD1FEDEB2A0039A23E /* CwlViews.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C93A89A71FEDEB2A0039A23E /* CwlViews.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C9BB0CBF200AE7F90062FB08 /* TimeTravelWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB0CBE200AE7F90062FB08 /* TimeTravelWindow.swift */; };
+		C9C6B8E21FF3D1DD001BC7EB /* TimeDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6B8E11FF3D1DD001BC7EB /* TimeDisplayView.swift */; };
+		C9C868631FEE8D4000865A60 /* SelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C868621FEE8D4000865A60 /* SelectView.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXFileReference section */
-		C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingStore.swift; sourceTree = "<group>"; };
-		C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
-		C92F21941F46929600AA4F51 /* Clocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C92F21971F46929600AA4F51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C92F21991F46929600AA4F51 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		C92F219B1F46929600AA4F51 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		C92F219E1F46929600AA4F51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C92F21A01F46929600AA4F51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C92F21A31F46929600AA4F51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C92F21A51F46929600AA4F51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTimezoneViewController.swift; sourceTree = "<group>"; };
-		C92F21BD1F46AEE800AA4F51 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		C92F21BF1F46C8B400AA4F51 /* TimeDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplayView.swift; sourceTree = "<group>"; };
-		C97FCCA41F4A609800A29B8E /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
-		C9D4A88E1F4911BF00540A86 /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
-		C9F67E861F47E047009FB127 /* CwlLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CwlLayout.swift; sourceTree = "<group>"; };
-		C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSizedView.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+/* Begin PBXContainerItemProxy section */
+		C93A898F1FEDEB290039A23E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C93A897D1FEDEB290039A23E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C93A898D1FEDEB290039A23E;
+			remoteInfo = CwlViews_iOS;
+		};
+		C93A89911FEDEB290039A23E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C93A897D1FEDEB290039A23E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C93A898D1FEDEB290039A23E;
+			remoteInfo = CwlViews_iOS;
+		};
+		C93A89931FEDEB290039A23E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C93A897D1FEDEB290039A23E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C93A898D1FEDEB290039A23E;
+			remoteInfo = CwlViews_iOS;
+		};
+		C93A89951FEDEB290039A23E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C93A897D1FEDEB290039A23E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C93A89871FEDEB290039A23E;
+			remoteInfo = FetchDependencies;
+		};
+/* End PBXContainerItemProxy section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		C92F21911F46929600AA4F51 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
+/* Begin PBXCopyFilesBuildPhase section */
+		C93A89821FEDEB290039A23E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
+			dstSubfolderSpec = 10;
 			files = (
+				C93A89AD1FEDEB2A0039A23E /* CwlViews.framework in CopyFiles */,
+				C93A89AB1FEDEB2A0039A23E /* CwlUtils.framework in CopyFiles */,
+				C93A89AC1FEDEB2A0039A23E /* CwlSignal.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXFrameworksBuildPhase section */
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		C93A89841FEDEB290039A23E /* Clocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A89891FEDEB290039A23E /* CwlUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CwlUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A898B1FEDEB290039A23E /* CwlSignal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CwlSignal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A898E1FEDEB290039A23E /* CwlViews.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CwlViews.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A89981FEDEB290039A23E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C93A899A1FEDEB290039A23E /* SplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitView.swift; sourceTree = "<group>"; };
+		C93A899C1FEDEB290039A23E /* MasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterView.swift; sourceTree = "<group>"; };
+		C93A899E1FEDEB290039A23E /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		C93A89A01FEDEB2A0039A23E /* DocumentAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentAdapter.swift; sourceTree = "<group>"; };
+		C93A89A21FEDEB2A0039A23E /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		C93A89A51FEDEB2A0039A23E /* CwlUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CwlUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A89A61FEDEB2A0039A23E /* CwlSignal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CwlSignal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A89A71FEDEB2A0039A23E /* CwlViews.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CwlViews.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C93A89A91FEDEB2A0039A23E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C93A89AA1FEDEB2A0039A23E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9BB0CBE200AE7F90062FB08 /* TimeTravelWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTravelWindow.swift; sourceTree = "<group>"; };
+		C9BB0CC3200B2CCE0062FB08 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C9C6B8E11FF3D1DD001BC7EB /* TimeDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeDisplayView.swift; sourceTree = "<group>"; };
+		C9C868621FEE8D4000865A60 /* SelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		C92F218B1F46929600AA4F51 = {
+		C93A897C1FEDEB290039A23E = {
 			isa = PBXGroup;
 			children = (
-				C92F21961F46929600AA4F51 /* Clocks */,
-				C92F21951F46929600AA4F51 /* Products */,
+				C93A89971FEDEB290039A23E /* Clocks */,
+				C93A89851FEDEB290039A23E /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		C92F21951F46929600AA4F51 /* Products */ = {
+		C93A89851FEDEB290039A23E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C92F21941F46929600AA4F51 /* Clocks.app */,
+				C93A89841FEDEB290039A23E /* Clocks.app */,
+				C93A89891FEDEB290039A23E /* CwlUtils.framework */,
+				C93A898B1FEDEB290039A23E /* CwlSignal.framework */,
+				C93A898E1FEDEB290039A23E /* CwlViews.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C92F21961F46929600AA4F51 /* Clocks */ = {
+		C93A89971FEDEB290039A23E /* Clocks */ = {
 			isa = PBXGroup;
 			children = (
-				C92F21BD1F46AEE800AA4F51 /* Document.swift */,
-				C9D4A88E1F4911BF00540A86 /* ViewState.swift */,
-				C92F21971F46929600AA4F51 /* AppDelegate.swift */,
-				C97FCCA41F4A609800A29B8E /* SplitViewController.swift */,
-				C92F21991F46929600AA4F51 /* MasterViewController.swift */,
-				C92F219B1F46929600AA4F51 /* DetailViewController.swift */,
-				C92F21BB1F46A10000AA4F51 /* SelectTimezoneViewController.swift */,
-				C92F21BF1F46C8B400AA4F51 /* TimeDisplayView.swift */,
-				C9F67E8A1F47F837009FB127 /* Utilities */,
-				C92F219D1F46929600AA4F51 /* Main.storyboard */,
-				C92F21A01F46929600AA4F51 /* Assets.xcassets */,
-				C92F21A21F46929600AA4F51 /* LaunchScreen.storyboard */,
-				C92F21A51F46929600AA4F51 /* Info.plist */,
+				C93A89981FEDEB290039A23E /* main.swift */,
+				C93A899A1FEDEB290039A23E /* SplitView.swift */,
+				C93A899C1FEDEB290039A23E /* MasterView.swift */,
+				C93A899E1FEDEB290039A23E /* DetailView.swift */,
+				C9C868621FEE8D4000865A60 /* SelectView.swift */,
+				C93A89A01FEDEB2A0039A23E /* DocumentAdapter.swift */,
+				C93A89A21FEDEB2A0039A23E /* Document.swift */,
+				C9C6B8E11FF3D1DD001BC7EB /* TimeDisplayView.swift */,
+				C9BB0CBE200AE7F90062FB08 /* TimeTravelWindow.swift */,
+				C9BB0CC3200B2CCE0062FB08 /* Main.storyboard */,
+				C93A89A81FEDEB2A0039A23E /* LaunchScreen.storyboard */,
+				C93A89AA1FEDEB2A0039A23E /* Info.plist */,
+				C93A89A41FEDEB2A0039A23E /* Dependencies */,
 			);
 			path = Clocks;
 			sourceTree = "<group>";
 		};
-		C9F67E8A1F47F837009FB127 /* Utilities */ = {
+		C93A89A41FEDEB2A0039A23E /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				C9F67E861F47E047009FB127 /* CwlLayout.swift */,
-				C9F67E881F47F82F009FB127 /* KeyboardSizedView.swift */,
-				C91F03DA1F4818D70035D3ED /* HistoryViewController.swift */,
-				C911F3471F495FD400B6E2F3 /* NotifyingStore.swift */,
+				C93A89A51FEDEB2A0039A23E /* CwlUtils.framework */,
+				C93A89A61FEDEB2A0039A23E /* CwlSignal.framework */,
+				C93A89A71FEDEB2A0039A23E /* CwlViews.framework */,
 			);
-			path = Utilities;
+			name = Dependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C92F21931F46929600AA4F51 /* Clocks */ = {
+		C93A89831FEDEB290039A23E /* Clocks */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C92F21B31F46929600AA4F51 /* Build configuration list for PBXNativeTarget "Clocks" */;
+			buildConfigurationList = C93A89B61FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "Clocks" */;
 			buildPhases = (
-				C92F21901F46929600AA4F51 /* Sources */,
-				C92F21911F46929600AA4F51 /* Frameworks */,
-				C92F21921F46929600AA4F51 /* Resources */,
+				C93A89811FEDEB290039A23E /* Sources */,
+				C93A89821FEDEB290039A23E /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C93A89901FEDEB290039A23E /* PBXTargetDependency */,
 			);
 			name = Clocks;
 			productName = Clocks;
-			productReference = C92F21941F46929600AA4F51 /* Clocks.app */;
+			productReference = C93A89841FEDEB290039A23E /* Clocks.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C93A89881FEDEB290039A23E /* CwlUtils_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C93A89B91FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlUtils_iOS" */;
+			buildPhases = (
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C93A89921FEDEB290039A23E /* PBXTargetDependency */,
+			);
+			name = CwlUtils_iOS;
+			productName = CwlUtils_iOS;
+			productReference = C93A89891FEDEB290039A23E /* CwlUtils.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C93A898A1FEDEB290039A23E /* CwlSignal_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C93A89BC1FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlSignal_iOS" */;
+			buildPhases = (
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C93A89941FEDEB290039A23E /* PBXTargetDependency */,
+			);
+			name = CwlSignal_iOS;
+			productName = CwlSignal_iOS;
+			productReference = C93A898B1FEDEB290039A23E /* CwlSignal.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C93A898D1FEDEB290039A23E /* CwlViews_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C93A89B31FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlViews_iOS" */;
+			buildPhases = (
+				C93A898C1FEDEB290039A23E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C93A89961FEDEB290039A23E /* PBXTargetDependency */,
+			);
+			name = CwlViews_iOS;
+			productName = CwlViews_iOS;
+			productReference = C93A898E1FEDEB290039A23E /* CwlViews.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		C92F218C1F46929600AA4F51 /* Project object */ = {
+		C93A897D1FEDEB290039A23E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Matt Gallagher";
 				TargetAttributes = {
-					C92F21931F46929600AA4F51 = {
-						CreatedOnToolsVersion = 9.0;
+					C93A89831FEDEB290039A23E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					C93A89871FEDEB290039A23E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					C93A89881FEDEB290039A23E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					C93A898A1FEDEB290039A23E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					C93A898D1FEDEB290039A23E = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = C92F218F1F46929600AA4F51 /* Build configuration list for PBXProject "Clocks" */;
+			buildConfigurationList = C93A89801FEDEB290039A23E /* Build configuration list for PBXProject "Clocks" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -145,64 +258,100 @@
 				en,
 				Base,
 			);
-			mainGroup = C92F218B1F46929600AA4F51;
-			productRefGroup = C92F21951F46929600AA4F51 /* Products */;
+			mainGroup = C93A897C1FEDEB290039A23E;
+			productRefGroup = C93A89851FEDEB290039A23E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C92F21931F46929600AA4F51 /* Clocks */,
+				C93A89831FEDEB290039A23E /* Clocks */,
+				C93A89871FEDEB290039A23E /* FetchDependencies */,
+				C93A89881FEDEB290039A23E /* CwlUtils_iOS */,
+				C93A898A1FEDEB290039A23E /* CwlSignal_iOS */,
+				C93A898D1FEDEB290039A23E /* CwlViews_iOS */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		C92F21921F46929600AA4F51 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* Begin PBXShellScriptBuildPhase section */
+		C93A89861FEDEB290039A23E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C92F21A41F46929600AA4F51 /* LaunchScreen.storyboard in Resources */,
-				C92F21A11F46929600AA4F51 /* Assets.xcassets in Resources */,
-				C92F219F1F46929600AA4F51 /* Main.storyboard in Resources */,
+			);
+			inputPaths = (
+				"$(SRCROOT)/Package.swift",
+			);
+			outputPaths = (
+				"$(OBJROOT)/dependencies-state.json",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/usr/bin/xcrun --sdk macosx swift";
+			shellScript = "//\n//  CwlPackageFetch.swift\n//  CwlPackageFetch\n//\n//  Created by Matt Gallagher on 2017/01/31.\n//  Copyright © 2017 Matt Gallagher ( http://cocoawithlove.com ). All rights reserved.\n//\n//  Permission to use, copy, modify, and/or distribute this software for any\n//  purpose with or without fee is hereby granted, provided that the above\n//  copyright notice and this permission notice appear in all copies.\n//\n//  THE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\n//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\n//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY\n//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\n//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\n//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\n//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.\n//\n\nimport Foundation\n\nextension FileHandle: TextOutputStream { public func write(_ string: String) { string.data(using: .utf8).map { write($0) } } }\nvar stdErrStream = FileHandle.standardError\n\nif let carthage = ProcessInfo.processInfo.environment[\"CARTHAGE\"], carthage == \"YES\" {\n\tprint(\"Disabling swift package manager dependency management in favor of Carthage.\")\n\texit(0)\n}\n\nguard let toolchainDir = ProcessInfo.processInfo.environment[\"TOOLCHAIN_DIR\"] else {\n\tprint(\"error: variable TOOLCHAIN_DIR (the location of swift) must be set\", to: &stdErrStream)\n\texit(1)\n}\nguard let srcRoot = ProcessInfo.processInfo.environment[\"SRCROOT\"].map({ URL(fileURLWithPath: $0) }) else {\n\tprint(\"error: Environment variable SRCROOT (the root of the source tree) must be set\", to: &stdErrStream)\n\texit(1)\n}\nguard let buildDir = ProcessInfo.processInfo.environment[\"OBJROOT\"] else {\n\tprint(\"error: Environment variable OBJROOT (the build intermediates directory) must be set\", to: &stdErrStream)\n\texit(1)\n}\n\n// Avoid downloading a further copy during an archive build.\nlet buildDirUrl = URL(fileURLWithPath: buildDir)\nlet nonArchiveBuildDir: String\nlet pathOffset: String\nif buildDirUrl.lastPathComponent == \"IntermediateBuildFilesPath\" && buildDirUrl.deletingLastPathComponent().deletingLastPathComponent().lastPathComponent == \"ArchiveIntermediates\" {\n\tnonArchiveBuildDir = buildDirUrl.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().path\n\tpathOffset = \"../../../../\"\n} else {\n\tnonArchiveBuildDir = buildDir\n\tpathOffset = \"../\"\n}\n\n// Launch a process and run to completion, returning the standard out on success.\nfunc launch(_ command: String, _ arguments: [String], directory: URL? = nil) -> String? {\n\tlet proc = Process()\n\tproc.launchPath = command\n\tproc.arguments = arguments\n\t_ = directory.map { proc.currentDirectoryPath = $0.path }\n\tlet pipe = Pipe()\n\tproc.standardOutput = pipe\n\tproc.launch()\n\tlet result = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? \"\"\n\tproc.waitUntilExit()\n\treturn proc.terminationStatus != 0 ? nil : result\n}\n\n// STEP 0: if the `Package.swift` file doesn't exist, create it.\n// For anything *except* a CwlViews project, you'll need to customize this before it is useful.\nlet packageURL = srcRoot.appendingPathComponent(\"Package.swift\")\nprint(\"### Testing existence of \\(packageURL.path)\")\nif !FileManager.default.fileExists(atPath: packageURL.path) {\n\tguard let projectName = ProcessInfo.processInfo.environment[\"PROJECT_NAME\"] else {\n\t\tprint(\"error: If Package.swift not present, environment variable PROJECT_NAME must be set (will be used as the main target name)\", to: &stdErrStream)\n\t\texit(1)\n\t}\n\tlet defaultPackageManifest = \"// swift-tools-version:4.0\\nimport PackageDescription\\n\\nlet package = Package(\\n\\tname: \\\"\\(projectName)\\\",\\n\\tdependencies: [.package(url: \\\"https://github.com/mattgallagher/CwlViews.git\\\", from: \\\"0.1.0\\\")]\\n)\\n\"\n\tif let _ = try? defaultPackageManifest.write(to: packageURL, atomically: true, encoding: .utf8) {\n\t\tprint(\"Wrote default Package.swift file to \\(packageURL.path)\")\n\t} else {\n\t\tprint(\"error: Unable to write manifest file.\", to: &stdErrStream)\n\t\texit(1)\n\t}\n}\n\n// STEP 1: use `swift package update` to get all dependencies\nprint(\"### Starting package resolve into \\(nonArchiveBuildDir)\")\n#if swift(>=4)\nlet verb = \"resolve\"\n#else\nlet verb = \"update\"\n#endif\nif let fetchResult = launch(toolchainDir + \"/usr/bin/swift\", [\"package\", \"--build-path\", \"\\(nonArchiveBuildDir)\", verb], directory: srcRoot) {\n\tif fetchResult == \"\" {\n\t\tprint(\"### All dependencies up-to-date.\")\n\t} else {\n\t\tprint(fetchResult, terminator: \"\")\n\t}\n} else {\n\tprint(\"error: swift package resolve failed\", to: &stdErrStream)\n\texit(1)\n}\n\n// STEP 1.5: ensure that \"dependencies-state.json\" exists when running under Swift 3\n#if swift(>=4)\n#else\nlet newPath = nonArchiveBuildDir + \"/dependencies-state.json\"\nlet oldPath = nonArchiveBuildDir + \"/workspace-state.json\"\nlet attributesNew = try? FileManager.default.attributesOfItem(atPath: newPath)\nlet attributesOld = try? FileManager.default.attributesOfItem(atPath: oldPath)\ndo {\n\tif let an = attributesNew, let ao = attributesOld, let anm = an[FileAttributeKey.modificationDate] as? Date, let aom = ao[FileAttributeKey.modificationDate] as? Date, aom > anm {\n\t\ttry FileManager.default.removeItem(atPath: newPath)\n\t\ttry FileManager.default.copyItem(atPath: oldPath, toPath: newPath)\n\t} else if attributesOld != nil && attributesNew == nil {\n\t\ttry FileManager.default.copyItem(atPath: oldPath, toPath: newPath)\n\t}\n} catch {\n\tprint(error, to: &stdErrStream)\n\tprint(\"error: Unable to update dependencies-state.json\", to: &stdErrStream)\n\texit(1)\n}\n#endif\n\n\n// Create a symlink only if it is not already present and pointing to the destination\nlet symlinksName = \"cwl_symlinks\"\nlet symlinksURL = URL(fileURLWithPath: buildDir).appendingPathComponent(symlinksName)\nfunc createSymlink(srcRoot: URL, name: String, destination: String) throws {\n\tlet location = symlinksURL.appendingPathComponent(name)\n\tlet link = URL(fileURLWithPath: \"\\(pathOffset)\\(destination)\", relativeTo: location)\n\tlet current = try? FileManager.default.destinationOfSymbolicLink(atPath: location.path)\n\tif current == nil || current != link.relativePath {\n\t\t_ = try? FileManager.default.removeItem(at: location)\n\t\ttry FileManager.default.createSymbolicLink(atPath: location.path, withDestinationPath:\n\t\t\tlink.relativePath)\n\t\tprint(\"Created symbolic link: \\(location.path) -> \\(link.relativePath)\")\n\t}\n}\n\n// Recursively parse the dependency graph JSON, creating symlinks in our own location\nfunc createSymlinks(srcRoot: URL, description: Dictionary<String, Any>, topLevelPath: String) throws {\n\tguard let dependencies = description[\"dependencies\"] as? [Dictionary<String, Any>] else { return }\n\tfor dependency in dependencies {\n\t\t#if swift(>=4)\n\t\t\tguard let path = dependency[\"path\"] as? String, let relativePath = (path.range(of: topLevelPath)?.upperBound).map({ String(path[$0...]) }), let name = dependency[\"name\"] as? String else {\n\t\t\t\tthrow NSError(domain: \"CwlError\", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey: \"Unable to parse dependency structure\"])\n\t\t\t}\n\t\t#else\n\t\t\tguard let path = dependency[\"path\"] as? String, let relativePath = (path.range(of: topLevelPath)?.upperBound).map({ path[$0...] }), let name = dependency[\"name\"] as? String else {\n\t\t\t\tthrow NSError(domain: \"CwlError\", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey: \"Unable to parse dependency structure\"])\n\t\t\t}\n\t\t#endif\n\t\ttry createSymlink(srcRoot: srcRoot, name: name, destination: relativePath)\n\t\ttry createSymlinks(srcRoot: srcRoot, description: dependency, topLevelPath: topLevelPath)\n\t}\n}\n\n// STEP 2: create symlinks from our stable locations to the fetched locations\nguard let descriptionString = launch(toolchainDir + \"/usr/bin/swift\", [\"package\", \"--build-path\", \"\\(nonArchiveBuildDir)\", \"show-dependencies\", \"--format\", \"json\"], directory: srcRoot) else {\n\tprint(\"error: swift package show-dependencies failed\", to: &stdErrStream)\n\texit(1)\n}\ndo {\n\t// Note that despite asking for JSON formatting, there may be log information on STDOUT before the JSON starts.\n\t#if swift(>=4)\n\t\tguard let jsonStartIndex = descriptionString.index(of: \"{\"), let descriptionData = String(descriptionString[jsonStartIndex...]).data(using: .utf8), let description = try JSONSerialization.jsonObject(with: descriptionData, options: []) as? Dictionary<String, Any> else {\n\t\t\tthrow NSError(domain: \"CwlError\", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey: \"Unable to parse dependency structure\"])\n\t\t}\n\t#else\n\t\tguard let jsonStartIndex = descriptionString.index(of: \"{\"), let descriptionData = descriptionString[jsonStartIndex...].data(using: .utf8), let description = try JSONSerialization.jsonObject(with: descriptionData, options: []) as? Dictionary<String, Any> else {\n\t\t\tthrow NSError(domain: \"CwlError\", code: 0, userInfo: [NSLocalizedFailureReasonErrorKey: \"Unable to parse dependency structure\"])\n\t\t}\n\t#endif\n\ttry FileManager.default.createDirectory(at: symlinksURL, withIntermediateDirectories: true, attributes: nil)\n\ttry createSymlinks(srcRoot: srcRoot, description: description, topLevelPath: nonArchiveBuildDir + \"/\")\n\tprint(\"### Complete.\")\n} catch {\n\tprint(\"error: symlink creation failed: \\(error)\", to: &stdErrStream)\n\tprint(\"Package description was...\", to: &stdErrStream)\n\tprint(descriptionString, to: &stdErrStream)\n\texit(1)\n}";
 		};
-/* End PBXResourcesBuildPhase section */
+		C93A898C1FEDEB290039A23E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(OBJROOT)/dependencies-state.json",
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/CwlViews.framework/CwlViews",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CARTHAGE\" == \"YES\" ]; then\n  cp -R \"$SRCROOT/Carthage/Build/iOS/CwlUtils.framework\" \"$BUILT_PRODUCTS_DIR/\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/CwlSignal.framework\" \"$BUILT_PRODUCTS_DIR/\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/CwlViews.framework\" \"$BUILT_PRODUCTS_DIR/\"\n  exit\nfi\n\"$DEVELOPER_BIN_DIR/xcodebuild\" -project \"$OBJROOT/cwl_symlinks/CwlViews/CwlViews.xcodeproj\" -target CwlViews_iOS -sdk \"$SDKROOT\" -configuration \"$CONFIGURATION\" $ACTION SRCROOT=\"$SRCROOT\" SYMROOT=\"$SYMROOT\" OBJROOT=\"$OBJROOT\" ARCHS=\"$ARCHS\" ONLY_ACTIVE_ARCH=\"$ONLY_ACTIVE_ARCH\" BITCODE_GENERATION_MODE=\"$BITCODE_GENERATION_MODE\" MODULE_CACHE_DIR=\"$MODULE_CACHE_DIR\" DSTROOT=\"$DSTROOT\" CACHE_ROOT=\"$CACHE_ROOT\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C92F21901F46929600AA4F51 /* Sources */ = {
+		C93A89811FEDEB290039A23E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C911F3481F495FD400B6E2F3 /* NotifyingStore.swift in Sources */,
-				C92F21BE1F46AEE800AA4F51 /* Document.swift in Sources */,
-				C92F219C1F46929600AA4F51 /* DetailViewController.swift in Sources */,
-				C9D4A88F1F4911BF00540A86 /* ViewState.swift in Sources */,
-				C92F219A1F46929600AA4F51 /* MasterViewController.swift in Sources */,
-				C92F21981F46929600AA4F51 /* AppDelegate.swift in Sources */,
-				C92F21C01F46C8B400AA4F51 /* TimeDisplayView.swift in Sources */,
-				C9F67E891F47F82F009FB127 /* KeyboardSizedView.swift in Sources */,
-				C91F03DB1F4818D70035D3ED /* HistoryViewController.swift in Sources */,
-				C92F21BC1F46A10000AA4F51 /* SelectTimezoneViewController.swift in Sources */,
-				C9F67E871F47E047009FB127 /* CwlLayout.swift in Sources */,
-				C97FCCA51F4A609800A29B8E /* SplitViewController.swift in Sources */,
+				C9C6B8E21FF3D1DD001BC7EB /* TimeDisplayView.swift in Sources */,
+				C93A899B1FEDEB290039A23E /* SplitView.swift in Sources */,
+				C9BB0CBF200AE7F90062FB08 /* TimeTravelWindow.swift in Sources */,
+				C93A899F1FEDEB290039A23E /* DetailView.swift in Sources */,
+				C9C868631FEE8D4000865A60 /* SelectView.swift in Sources */,
+				C93A89A31FEDEB2A0039A23E /* Document.swift in Sources */,
+				C93A899D1FEDEB290039A23E /* MasterView.swift in Sources */,
+				C93A89A11FEDEB2A0039A23E /* DocumentAdapter.swift in Sources */,
+				C93A89991FEDEB290039A23E /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		C92F219D1F46929600AA4F51 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C92F219E1F46929600AA4F51 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		C93A89901FEDEB290039A23E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C93A898D1FEDEB290039A23E /* CwlViews_iOS */;
+			targetProxy = C93A898F1FEDEB290039A23E /* PBXContainerItemProxy */;
 		};
-		C92F21A21F46929600AA4F51 /* LaunchScreen.storyboard */ = {
+		C93A89921FEDEB290039A23E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C93A898D1FEDEB290039A23E /* CwlViews_iOS */;
+			targetProxy = C93A89911FEDEB290039A23E /* PBXContainerItemProxy */;
+		};
+		C93A89941FEDEB290039A23E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C93A898D1FEDEB290039A23E /* CwlViews_iOS */;
+			targetProxy = C93A89931FEDEB290039A23E /* PBXContainerItemProxy */;
+		};
+		C93A89961FEDEB290039A23E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C93A89871FEDEB290039A23E /* FetchDependencies */;
+			targetProxy = C93A89951FEDEB290039A23E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C93A89A81FEDEB2A0039A23E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C92F21A31F46929600AA4F51 /* Base */,
+				C93A89A91FEDEB2A0039A23E /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -210,7 +359,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		C92F21B11F46929600AA4F51 /* Debug */ = {
+		C93A89AE1FEDEB2A0039A23E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -239,7 +388,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -258,16 +407,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		C92F21B21F46929600AA4F51 /* Release */ = {
+		C93A89AF1FEDEB2A0039A23E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -296,7 +446,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -309,62 +459,173 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		C92F21B41F46929600AA4F51 /* Debug */ = {
+		C93A89B11FEDEB2A0039A23E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = Clocks/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cocoawithlove.Clocks;
+				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		C92F21B51F46929600AA4F51 /* Release */ = {
+		C93A89B21FEDEB2A0039A23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C93A89B41FEDEB2A0039A23E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlViews;
+			};
+			name = Debug;
+		};
+		C93A89B51FEDEB2A0039A23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlViews;
+			};
+			name = Release;
+		};
+		C93A89B71FEDEB2A0039A23E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = S7YQ892G6G;
 				INFOPLIST_FILE = Clocks/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoawithlove.Clocks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C93A89B81FEDEB2A0039A23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = S7YQ892G6G;
+				INFOPLIST_FILE = Clocks/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoawithlove.Clocks;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		C93A89BA1FEDEB2A0039A23E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlUtils;
+			};
+			name = Debug;
+		};
+		C93A89BB1FEDEB2A0039A23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlUtils;
+			};
+			name = Release;
+		};
+		C93A89BD1FEDEB2A0039A23E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlSignal;
+			};
+			name = Debug;
+		};
+		C93A89BE1FEDEB2A0039A23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_NAME = CwlSignal;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C92F218F1F46929600AA4F51 /* Build configuration list for PBXProject "Clocks" */ = {
+		C93A89801FEDEB290039A23E /* Build configuration list for PBXProject "Clocks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C92F21B11F46929600AA4F51 /* Debug */,
-				C92F21B21F46929600AA4F51 /* Release */,
+				C93A89AE1FEDEB2A0039A23E /* Debug */,
+				C93A89AF1FEDEB2A0039A23E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C92F21B31F46929600AA4F51 /* Build configuration list for PBXNativeTarget "Clocks" */ = {
+		C93A89B01FEDEB2A0039A23E /* Build configuration list for PBXAggregateTarget "FetchDependencies" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C92F21B41F46929600AA4F51 /* Debug */,
-				C92F21B51F46929600AA4F51 /* Release */,
+				C93A89B11FEDEB2A0039A23E /* Debug */,
+				C93A89B21FEDEB2A0039A23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C93A89B31FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlViews_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C93A89B41FEDEB2A0039A23E /* Debug */,
+				C93A89B51FEDEB2A0039A23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C93A89B61FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "Clocks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C93A89B71FEDEB2A0039A23E /* Debug */,
+				C93A89B81FEDEB2A0039A23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C93A89B91FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlUtils_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C93A89BA1FEDEB2A0039A23E /* Debug */,
+				C93A89BB1FEDEB2A0039A23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C93A89BC1FEDEB2A0039A23E /* Build configuration list for PBXNativeTarget "CwlSignal_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C93A89BD1FEDEB2A0039A23E /* Debug */,
+				C93A89BE1FEDEB2A0039A23E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = C92F218C1F46929600AA4F51 /* Project object */;
+	rootObject = C93A897D1FEDEB290039A23E /* Project object */;
 }

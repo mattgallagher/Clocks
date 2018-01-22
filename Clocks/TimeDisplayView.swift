@@ -17,7 +17,23 @@
 //  OF THIS SOFTWARE.
 //
 
-import UIKit
+import CwlViews
+
+class TimeDisplay: ViewConstructor {
+	var state: BinderState<UIView, Signal<Row>>
+	init(row: Signal<Row>) {
+		self.state = .pending(row)
+	}
+	public func view() -> Layout.View {
+		return state.construct { row in
+			let v = View(subclass: TimeDisplayView.self, .backgroundColor -- .clear)
+			let b = row.adhocBinding(toType: TimeDisplayView.self) {
+				$0.components = $1.current
+			}
+			return v.instance(additional: b)
+		}
+	}
+}
 
 class TimeDisplayView: UIView {
 	var components: DateComponents { didSet { setNeedsDisplay() } }
@@ -34,16 +50,6 @@ class TimeDisplayView: UIView {
 	
 	override func layoutSubviews() {
 		self.setNeedsDisplay()
-	}
-	
-	@discardableResult
-	func updateDisplay(timezone: Timezone) -> DateComponents {
-		guard let tz = TimeZone(identifier: timezone.identifier) else { return DateComponents() }
-		var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-		calendar.timeZone = tz
-		let dateComponents = calendar.dateComponents([.hour, .minute, .second], from: Date())
-		self.components = dateComponents
-		return dateComponents
 	}
 	
 	func radialMark(center: CGPoint, outerRadius: CGFloat, innerRadius: CGFloat, sixtieths: CGFloat, color: UIColor, lineWidth: CGFloat) {

@@ -2,24 +2,21 @@
 //  Document.swift
 //  Clocks
 //
-//  Created by Matt Gallagher on 2017/08/18.
+//  Created by Matt Gallagher on 2017/12/23.
 //  Copyright © 2017 Matt Gallagher. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any purpose with or without
-//  fee is hereby granted, provided that the above copyright notice and this permission notice
-//  appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
-//  SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
-//  AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-//  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
-//  OF THIS SOFTWARE.
-//
 
-import Foundation
+import CwlViews
 
-struct Timezone: Codable {
+struct Timezone: Codable, Comparable {
+	static func <(l: Timezone, r: Timezone) -> Bool {
+		return l.name == r.name ? l.uuid.uuidString < r.uuid.uuidString : l.name < r.name
+	}
+	
+	static func ==(l: Timezone, r: Timezone) -> Bool {
+			return l.uuid == r.uuid
+	}
+	
 	let uuid: UUID
 	let identifier: String
 	var name: String
@@ -28,65 +25,66 @@ struct Timezone: Codable {
 	}
 }
 
-class Document {
-	enum Action {
-		case added(UUID)
-		case updated(UUID)
-		case removed(UUID)
+struct Document {
+	enum Notification {
+		case changed(SetMutation<Array<Timezone>>)
+		case nonFatalError(Error)
+		case reload
+		case noEffect
 	}
 	
-	static let shared = Document(url: Document.defaultUrlForShared)
+	static var defaultUrl: URL {
+		return try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(.documentFileName + ".json")
+	}
 	
 	let url: URL
-	private var timezones: [UUID: Timezone] = [:]
-	required init(url: URL) {
+	var timezones: [UUID: Timezone] = [:]
+	init(url: URL = Document.defaultUrl) {
 		self.url = url
 		do {
-			let data = try Data(contentsOf: url)
-			loadWithoutNotifying(jsonData: data)
+			timezones = try JSONDecoder().decode([UUID: Timezone].self, from: Data(contentsOf: url))
 		} catch {
 		}
 	}
 	
-	func addTimezone(_ identifier: String) {
+	mutating func addTimezone(_ identifier: String) -> Notification {
 		let tz = Timezone(name: identifier.split(separator: "/").last?.replacingOccurrences(of: "_", with: " ") ?? identifier, identifier: identifier)
 		timezones[tz.uuid] = tz
-		commitAction(Action.added(tz.uuid))
+		return .changed(.insert([tz]))
 	}
 	
-	func updateTimezone(_ uuid: UUID, newName: String) {
-		if var t = timezones[uuid] {
-			if t.name == newName {
-				// Don't save or post notifications when the name doesn't actually change
-				return
-			}
+	mutating func updateTimezone(_ uuid: UUID, newName: String) -> Notification {
+		if var t = timezones[uuid], t.name != newName {
 			t.name = newName
 			timezones[uuid] = t
-			commitAction(Action.updated(uuid))
+			return .changed(.update([t]))
 		}
+		return .noEffect
 	}
 	
-	func removeTimezone(_ uuid: UUID) {
-		if let _ = timezones.removeValue(forKey: uuid) {
-			commitAction(Action.removed(uuid))
+	mutating func removeTimezone(_ uuid: UUID) -> Notification {
+		if let t = timezones.removeValue(forKey: uuid) {
+			return .changed(.delete([t]))
 		}
+		return .noEffect
 	}
 	
-	func serialized() throws -> Data {
-		return try JSONEncoder().encode(timezones)
-	}
-}
-
-extension Document: NotifyingStore {
-	static let shortName = "Document"
-	var persistToUrl: URL? { return url }
-	typealias DataType = [UUID: Timezone]
-	var content: [UUID: Timezone] { return timezones }
-	func loadWithoutNotifying(jsonData: Data) {
+	mutating func save() -> Notification {
 		do {
-			timezones = try JSONDecoder().decode(DataType.self, from: jsonData)
+			let data = try JSONEncoder().encode(timezones)
+			try data.write(to: url)
+			return .noEffect
 		} catch {
+			return .nonFatalError(error)
 		}
+	}
+	
+	mutating func restore(timezones: [UUID: Timezone]) -> Notification {
+		self.timezones = timezones
+		return .reload
 	}
 }
 
+fileprivate extension String {
+	static let documentFileName = "document.json"
+}
