@@ -38,24 +38,24 @@ func selectViewController(_ select: SelectState, _ split: SplitState, _ doc: Doc
 				.view(navBar(split)),
 				.view(searchBar(select)),
 				.view(length: .fillRemaining,
-					tableView(select, split, doc)
+					selectTableView(select, split, doc)
 				)
 			)
 		)
 	)
 }
 
-fileprivate func tableView(_ select: SelectState, _ split: SplitState, _ doc: DocumentAdapter) -> TableView<String> {
+func selectTableView(_ select: SelectState, _ split: SplitState, _ doc: DocumentAdapter) -> TableView<String> {
 	return TableView<String>(
-		.cellIdentifier -- { rowDescription in .textRowIdentifier },
-		.cellConstructor -- { reuseIdentifier, cellData in
-			TableViewCell(.textLabel -- Label(.text -- cellData))
-		},
 		.tableData -- select.search.map { text in
 			let value = text.lowercased()
 			return TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
 				value.isEmpty || str.lowercased().range(of: value) != nil
 			}.tableData()
+		},
+		.cellIdentifier -- { rowDescription in .textRowIdentifier },
+		.cellConstructor -- { cellIdentifier, rowData in
+			TableViewCell(.textLabel -- Label(.text -- rowData))
 		},
 		.visibleRowsChanged -- updateFirstRow(select.firstRow),
 		.scrollToRow -- select.firstRow.restoreFirstRow(),
@@ -97,5 +97,5 @@ fileprivate func searchBar(_ select: SelectState) -> SearchBarConstructor {
 fileprivate extension String {
 	static let selectTimezone = NSLocalizedString("Select Timezone", comment: "")
 	static let searchTimezones = NSLocalizedString("Search timezones...", comment: "")
-	static let textRowIdentifier = "TextRow"
+	static let textRowIdentifier = "textRow"
 }

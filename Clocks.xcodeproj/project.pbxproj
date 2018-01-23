@@ -35,6 +35,7 @@
 		C9BB0CBF200AE7F90062FB08 /* TimeTravelWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BB0CBE200AE7F90062FB08 /* TimeTravelWindow.swift */; };
 		C9C6B8E21FF3D1DD001BC7EB /* TimeDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C6B8E11FF3D1DD001BC7EB /* TimeDisplayView.swift */; };
 		C9C868631FEE8D4000865A60 /* SelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C868621FEE8D4000865A60 /* SelectView.swift */; };
+		C9F6F62F2017546800C4B465 /* ClocksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F6F62E2017546800C4B465 /* ClocksTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C93A89871FEDEB290039A23E;
 			remoteInfo = FetchDependencies;
+		};
+		C9F6F6312017546800C4B465 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C93A897D1FEDEB290039A23E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C93A89831FEDEB290039A23E;
+			remoteInfo = Clocks;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -102,13 +110,27 @@
 		C9BB0CC3200B2CCE0062FB08 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9C6B8E11FF3D1DD001BC7EB /* TimeDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeDisplayView.swift; sourceTree = "<group>"; };
 		C9C868621FEE8D4000865A60 /* SelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectView.swift; sourceTree = "<group>"; };
+		C9F6F62C2017546800C4B465 /* ClocksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClocksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9F6F62E2017546800C4B465 /* ClocksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClocksTests.swift; sourceTree = "<group>"; };
+		C9F6F6302017546800C4B465 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C9F6F6292017546800C4B465 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		C93A897C1FEDEB290039A23E = {
 			isa = PBXGroup;
 			children = (
 				C93A89971FEDEB290039A23E /* Clocks */,
+				C9F6F62D2017546800C4B465 /* ClocksTests */,
 				C93A89851FEDEB290039A23E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -120,6 +142,7 @@
 				C93A89891FEDEB290039A23E /* CwlUtils.framework */,
 				C93A898B1FEDEB290039A23E /* CwlSignal.framework */,
 				C93A898E1FEDEB290039A23E /* CwlViews.framework */,
+				C9F6F62C2017546800C4B465 /* ClocksTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,6 +175,15 @@
 				C93A89A71FEDEB2A0039A23E /* CwlViews.framework */,
 			);
 			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		C9F6F62D2017546800C4B465 /* ClocksTests */ = {
+			isa = PBXGroup;
+			children = (
+				C9F6F62E2017546800C4B465 /* ClocksTests.swift */,
+				C9F6F6302017546800C4B465 /* Info.plist */,
+			);
+			path = ClocksTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,6 +253,24 @@
 			productReference = C93A898E1FEDEB290039A23E /* CwlViews.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		C9F6F62B2017546800C4B465 /* ClocksTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9F6F6352017546800C4B465 /* Build configuration list for PBXNativeTarget "ClocksTests" */;
+			buildPhases = (
+				C9F6F6282017546800C4B465 /* Sources */,
+				C9F6F6292017546800C4B465 /* Frameworks */,
+				C9F6F62A2017546800C4B465 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C9F6F6322017546800C4B465 /* PBXTargetDependency */,
+			);
+			name = ClocksTests;
+			productName = ClocksTests;
+			productReference = C9F6F62C2017546800C4B465 /* ClocksTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -251,6 +301,11 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
+					C9F6F62B2017546800C4B465 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C93A89831FEDEB290039A23E;
+					};
 				};
 			};
 			buildConfigurationList = C93A89801FEDEB290039A23E /* Build configuration list for PBXProject "Clocks" */;
@@ -271,6 +326,7 @@
 				C93A89881FEDEB290039A23E /* CwlUtils_iOS */,
 				C93A898A1FEDEB290039A23E /* CwlSignal_iOS */,
 				C93A898D1FEDEB290039A23E /* CwlViews_iOS */,
+				C9F6F62B2017546800C4B465 /* ClocksTests */,
 			);
 		};
 /* End PBXProject section */
@@ -282,6 +338,13 @@
 			files = (
 				C907D5732015C8DF00C72137 /* Main.storyboard in Resources */,
 				C907D5752015C9B000C72137 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9F6F62A2017546800C4B465 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +400,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9F6F6282017546800C4B465 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9F6F62F2017546800C4B465 /* ClocksTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -359,6 +430,11 @@
 			isa = PBXTargetDependency;
 			target = C93A89871FEDEB290039A23E /* FetchDependencies */;
 			targetProxy = C93A89951FEDEB290039A23E /* PBXContainerItemProxy */;
+		};
+		C9F6F6322017546800C4B465 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C93A89831FEDEB290039A23E /* Clocks */;
+			targetProxy = C9F6F6312017546800C4B465 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -583,6 +659,38 @@
 			};
 			name = Release;
 		};
+		C9F6F6332017546800C4B465 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ClocksTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoawithlove.ClocksTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clocks.app/Clocks";
+			};
+			name = Debug;
+		};
+		C9F6F6342017546800C4B465 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ClocksTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoawithlove.ClocksTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clocks.app/Clocks";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -636,6 +744,15 @@
 			buildConfigurations = (
 				C93A89BD1FEDEB2A0039A23E /* Debug */,
 				C93A89BE1FEDEB2A0039A23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9F6F6352017546800C4B465 /* Build configuration list for PBXNativeTarget "ClocksTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9F6F6332017546800C4B465 /* Debug */,
+				C9F6F6342017546800C4B465 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
