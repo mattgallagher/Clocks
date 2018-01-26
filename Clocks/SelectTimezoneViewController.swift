@@ -61,10 +61,9 @@ class SelectTimezoneViewController: UIViewController, UITableViewDataSource, UIT
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let indexPath = tableView.indexPathForSelectedRow, rows.indices.contains(indexPath.row) {
+		if rows.indices.contains(indexPath.row) {
 			Document.shared.addTimezone(rows[indexPath.row])
 		}
 		presentingViewController?.dismiss(animated: true, completion: nil)
 	}
 }
-
