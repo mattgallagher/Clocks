@@ -36,14 +36,14 @@ struct SplitState: StateContainer {
 func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConstructor {
 	return SplitViewController(
 		.preferredDisplayMode -- .allVisible,
-		.displayModeButton -- split.splitButton,
-		.dismissedSecondary -- Input().map { nil }.bind(to: split.detail),
+		.displayModeButton --> split.splitButton,
+		.dismissedSecondary --> Input().map { nil }.bind(to: split.detail),
 		.primaryViewController -- primaryViewController(split, doc),
 		.secondaryViewController -- secondaryViewController(split, doc),
-		.shouldShowSecondary -- split.detail.map {
+		.shouldShowSecondary <-- split.detail.map {
 			$0 != nil
 		},
-		.modalPresentation -- split.select.modalPresentation {
+		.modalPresentation <-- split.select.modalPresentation {
 			selectViewController($0, split, doc)
 		},
 		.cancelOnClose -- [
@@ -70,7 +70,7 @@ fileprivate  func primaryViewController(_ split: SplitState, _ doc: DocumentAdap
 fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
 	return NavigationController(
 		.navigationBar -- navBar(),
-		.stack -- split.detail
+		.stack <-- split.detail
 			.distinctUntilChanged { $0?.uuid == $1?.uuid }
 			.map {
 				guard let ds = $0 else { return [emptyDetailViewController(split)] }
@@ -99,7 +99,7 @@ fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControlle
 			)
 		),
 		.navigationItem -- NavigationItem(
-			.leftBarButtonItems -- split.splitButton.optionalToArray().animate(.none)
+			.leftBarButtonItems <-- split.splitButton.optionalToArray().animate(.none)
 		)
 	)
 }

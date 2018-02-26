@@ -25,12 +25,12 @@ private let viewState = Var(SplitState())
 fileprivate func application(_ viewState: Var<SplitState>, _ doc: DocumentAdapter) -> Application {
 	return Application(
 		.window -- Window(
-			.rootViewController -- viewState.map { split in
+			.rootViewController <-- viewState.map { split in
 				splitViewController(split, doc)
 			}
 		),
 		.additionalWindows -- [timeTravelWindow(doc, viewState)],
-		.didEnterBackground -- Input().map { .save }.bind(to: doc),
+		.didEnterBackground --> Input().map { .save }.bind(to: doc),
 		.willEncodeRestorableState -- { $0.encodeLatest(from: viewState) },
 		.didDecodeRestorableState -- { $0.decodeSend(to: viewState) }
 	)

@@ -86,7 +86,7 @@ func timeTravelWindow(_ doc: DocumentAdapter, _ viewState: Var<SplitState>) -> W
 		.backgroundColor -- .clear,
 		.isHidden -- false,
 		.windowLevel -- 1.0,
-		.frame -- windowFrame(),
+		.frame <-- windowFrame(),
 		.rootViewController -- ViewController(
 			.view -- View(
 				.backgroundColor -- UIColor(white: 0, alpha: 0.5),
@@ -118,8 +118,8 @@ func timeTravelWindow(_ doc: DocumentAdapter, _ viewState: Var<SplitState>) -> W
 fileprivate func slider(_ state: TimeTravelState) -> Slider {
 	return Slider(
 		.maximumValue -- 1.0,
-		.value -- state.sliderValue,
-		.actions -- .valueChanged(state.handleSlider)
+		.value <-- state.sliderValue,
+		.action(.valueChanged) --> state.handleSlider
 	)
 }
 
@@ -127,7 +127,7 @@ fileprivate func label(_ state: TimeTravelState) -> Label {
 	return Label(
 		.textColor -- .white,
 		.textAlignment -- .center,
-		.text -- state.offsetAndCount.map { "\($0.0) / \($0.1)" }
+		.text <-- state.offsetAndCount.map { "\($0.0) / \($0.1)" }
 	)
 }
 

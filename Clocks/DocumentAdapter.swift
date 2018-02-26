@@ -88,7 +88,7 @@ struct DocumentAdapter: SignalInputInterface {
 			.map { arrayMutation in arrayMutation.map { tz in Row(tz, dateComponents(in: tz)) } }
 	}
 	
-	private static func rowsFilter(document: Document, notification: Document.Notification?, next: SignalNext<SetMutation<Array<Timezone>>>) {
+	private static func rowsFilter(document: Document, notification: Document.Notification?, next: SignalNext<SetMutation<Timezone>>) {
 		switch notification ?? .reload {
 		case .changed(let c): next.send(value: c)
 		case .reload: next.send(value: .reload(Array(document.timezones.values)))
@@ -96,7 +96,7 @@ struct DocumentAdapter: SignalInputInterface {
 		}
 	}
 	
-	private static func updateTransformation(array: inout Array<Timezone>, message: EitherValue2<SetMutation<Array<Timezone>>, CodableRange>, next: SignalNext<ArrayMutation<Timezone>>) {
+	private static func updateTransformation(array: inout Array<Timezone>, message: EitherValue2<SetMutation<Timezone>, CodableRange>, next: SignalNext<ArrayMutation<Timezone>>) {
 		switch message {
 		case .value1(let mutation):
 			mutation

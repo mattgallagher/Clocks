@@ -47,7 +47,7 @@ func selectViewController(_ select: SelectState, _ split: SplitState, _ doc: Doc
 
 func selectTableView(_ select: SelectState, _ split: SplitState, _ doc: DocumentAdapter) -> TableView<String> {
 	return TableView<String>(
-		.tableData -- select.search.map { text in
+		.tableData <-- select.search.map { text in
 			let value = text.lowercased()
 			return TimeZone.knownTimeZoneIdentifiers.sorted().filter { str in
 				value.isEmpty || str.lowercased().range(of: value) != nil
@@ -55,13 +55,13 @@ func selectTableView(_ select: SelectState, _ split: SplitState, _ doc: Document
 		},
 		.cellIdentifier -- { rowDescription in .textRowIdentifier },
 		.cellConstructor -- { cellIdentifier, rowData in
-			TableViewCell(.textLabel -- Label(.text -- rowData))
+			TableViewCell(.textLabel -- Label(.text <-- rowData))
 		},
-		.visibleRowsChanged -- updateFirstRow(select.firstRow),
-		.scrollToRow -- select.firstRow.restoreFirstRow(),
-		.didSelectRow -- Input().multicast(
+		.visibleRowsChanged --> updateFirstRow(select.firstRow),
+		.scrollToRow <-- select.firstRow.restoreFirstRow(),
+		.didSelectRow --> Input().multicast(
 			Input().map { _ in nil }.bind(to: split.select),
-			Input().filterMap { .add($0.rowData!) }.bind(to: doc)
+			Input().filterMap { .add($0.data!) }.bind(to: doc)
 		)
 	)
 }
@@ -77,7 +77,7 @@ fileprivate func navBar(_ split: SplitState) -> NavigationBarConstructor {
 				.title -- .selectTimezone,
 				.rightBarButtonItems -- .set([BarButtonItem(
 					.barButtonSystemItem -- .cancel,
-					.action -- Input()
+					.action --> Input()
 						.map { nil }
 						.bind(to: split.select)
 				)])
@@ -89,8 +89,8 @@ fileprivate func navBar(_ split: SplitState) -> NavigationBarConstructor {
 fileprivate func searchBar(_ select: SelectState) -> SearchBarConstructor {
 	return SearchBar(
 		.placeholder -- .searchTimezones,
-		.text -- select.search,
-		.didChange -- select.search
+		.text <-- select.search,
+		.didChange --> select.search
 	)
 }
 

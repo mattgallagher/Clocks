@@ -38,7 +38,7 @@ struct Timezone: Codable, Comparable {
 
 struct Document {
 	enum Notification {
-		case changed(SetMutation<Array<Timezone>>)
+		case changed(SetMutation<Timezone>)
 		case nonFatalError(Error)
 		case reload
 		case noEffect

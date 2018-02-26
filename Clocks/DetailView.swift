@@ -27,12 +27,12 @@ func detailViewController(_ detail: DetailState, _ split: SplitState, _ doc: Doc
 	let row = doc.timezone(detail.uuid).continuous()
 	return ViewController(
 		.navigationItem -- NavigationItem(
-			.leftBarButtonItems -- split.splitButton.optionalToArray().animate(.none)
+			.leftBarButtonItems <-- split.splitButton.optionalToArray().animate(.none)
 		),
-		.title -- row.map { $0.timezone.name },
+		.title <-- row.map { $0.timezone.name },
 		.view -- View(
 			.backgroundColor -- UIColor(white: 0.95, alpha: 1.0),
-			.layout -- detailLayout(
+			.layout <-- detailLayout(
 				timeDisplay: TimeDisplay(row: row).view(),
 				hourLabel: timeLabel(row, \.hour, "%ld"),
 				hourSpace: timeSpacer(),
@@ -40,13 +40,13 @@ func detailViewController(_ detail: DetailState, _ split: SplitState, _ doc: Doc
 				minutesSpace: timeSpacer(),
 				secondsLabel: timeLabel(row, \.second, "%02ld"),
 				nameField: TextField(
-					.text -- row.map { $0.timezone.name },
+					.text <-- row.map { $0.timezone.name },
 					.textAlignment -- .center,
 					.borderStyle -- .roundedRect,
 					.font -- .systemFont(ofSize: 24),
 					.shouldReturn -- { _ in true },
-					.didChange -- Input()
-						.filterMap { $0?.unstyledText }
+					.didChange --> Input()
+						.filterMap { $0?.text }
 						.map { .update(detail.uuid, $0) }
 						.bind(to: doc)
 				)
@@ -97,7 +97,7 @@ fileprivate func keyboardHeight() -> Signal<CGFloat> {
 fileprivate func timeLabel(_ dateComponents: Signal<Row>, _ keyPath: KeyPath<DateComponents, Int?>, _ format: String) -> Label {
 	return Label(
 		.font -- .monospacedDigitSystemFont(ofSize: 24, weight: .regular),
-		.text -- dateComponents.map { String(format: format, $0.current[keyPath: keyPath]!) }
+		.text <-- dateComponents.map { String(format: format, $0.current[keyPath: keyPath]!) }
 	)
 }
 

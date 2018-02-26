@@ -23,7 +23,7 @@ struct TableState: StateContainer {
 	let isEditing: Var<Bool>
 	let visibleRows: Var<CodableRange>
 	let firstRow: Var<IndexPath?>
-	let selection: TempVar<TableRowDescription<Row>>
+	let selection: TempVar<TableRow<Row>>
 
 	init() {
 		isEditing = Var(false)
@@ -45,31 +45,31 @@ func masterViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCo
 			.cellIdentifier -- { rowDescription in .clockRowIdentifier },
 			.cellConstructor -- { identifer, data in return tableCell(data) },
 
-			.tableData -- doc
+			.tableData <-- doc
 				.rowsSignal(visibleRows: split.table.visibleRows.signal)
 				.tableData(),
-			.visibleRowsChanged -- Input().multicast(
+			.visibleRowsChanged --> Input().multicast(
 				updateFirstRow(split.table.firstRow),
 				Input()
 					.map { CodableRange($0.map { $0.indexPath.row }) }
 					.distinctUntilChanged()
 					.bind(to: split.table.visibleRows)
 			),
-			.scrollToRow -- split.table.firstRow.filterMap { $0.map { .none($0) } }.animate(.none),
+			.scrollToRow <-- split.table.firstRow.filterMap { $0.map { .none($0) } }.animate(.none),
 
-			.didSelectRow -- Input().multicast(
+			.didSelectRow --> Input().multicast(
 				Input().bind(to: split.table.selection),
 				Input()
-					.filterMap { $0.rowData.map { DetailState(uuid: $0.timezone.uuid) } }
+					.filterMap { $0.data.map { DetailState(uuid: $0.timezone.uuid) } }
 					.bind(to: split.detail)
 			),
-			.deselectRow -- split.table.selection
+			.deselectRow <-- split.table.selection
 				.debounce(interval: .milliseconds(250))
 				.map { .animate($0.indexPath) },
 
-			.isEditing -- split.table.isEditing.animate(),
-			.commit -- Input()
-				.filterMap { $0.rowDescription.rowData }
+			.isEditing <-- split.table.isEditing.animate(),
+			.commit --> Input()
+				.filterMap { $0.row.data }
 				.map { .remove($0.timezone.uuid) }
 				.bind(to: doc)
 		)
@@ -86,7 +86,7 @@ fileprivate func tableCell(_ row: Signal<Row>) -> TableViewCellConstructor {
 				),
 				.space(),
 				.view(length: .fillRemaining,
-					Label(.text -- row.map { $0.timezone.name })
+					Label(.text <-- row.map { $0.timezone.name })
 				),
 				.space()
 			)
@@ -97,17 +97,17 @@ fileprivate func tableCell(_ row: Signal<Row>) -> TableViewCellConstructor {
 fileprivate func navItem(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationItem {
 	return NavigationItem(
 		.title -- .clocks,
-		.leftBarButtonItems -- split.table.isEditing.map { e in
+		.leftBarButtonItems <-- split.table.isEditing.map { e in
 			[BarButtonItem(
 				.barButtonSystemItem -- e ? .done : .edit,
-				.action -- Input()
+				.action --> Input()
 					.map { !e }
 					.bind(to: split.table.isEditing)
 			)]
 		}.animate(),
 		.rightBarButtonItems -- .set([BarButtonItem(
 			.barButtonSystemItem -- .add,
-			.action -- Input()
+			.action --> Input()
 				.map { SelectState() }
 				.bind(to: split.select)
 		)])
