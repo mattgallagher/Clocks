@@ -19,7 +19,7 @@
 
 import CwlViews
 
-class TimeDisplay: ViewConstructor {
+class TimeDisplay: ViewInstance {
 	var state: BinderState<UIView, Signal<Row>>
 	init(row: Signal<Row>) {
 		self.state = .pending(row)

@@ -23,7 +23,7 @@ struct SplitState: StateContainer {
 	let table: TableState
 	let detail: Var<DetailState?>
 	let select: Var<SelectState?>
-	let splitButton = TempVar<BarButtonItemConstructor?>()
+	let splitButton = TempVar<BarButtonItemInstance?>()
 	
 	init() {
 		table = TableState()
@@ -33,7 +33,7 @@ struct SplitState: StateContainer {
 	var childValues: [StateContainer] { return [table, detail, select] }
 }
 
-func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConstructor {
+func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerInstance {
 	return SplitViewController(
 		.preferredDisplayMode -- .allVisible,
 		.displayModeButton --> split.splitButton,
@@ -60,14 +60,14 @@ func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCon
 	)
 }
 
-fileprivate  func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
+fileprivate  func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerInstance {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack -- [masterViewController(split, doc)]
 	)
 }
 
-fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerConstructor {
+fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerInstance {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack <-- split.detail
@@ -88,7 +88,7 @@ fileprivate func navBar() -> NavigationBar {
 	)
 }
 
-fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControllerConstructor {
+fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControllerInstance {
 	return ViewController(
 		.view -- View(
 			.backgroundColor -- UIColor(white: 0.95, alpha: 1.0),
