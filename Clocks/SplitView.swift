@@ -5,25 +5,14 @@
 //  Created by Matt Gallagher on 2017/12/23.
 //  Copyright © 2017 Matt Gallagher. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any purpose with or without
-//  fee is hereby granted, provided that the above copyright notice and this permission notice
-//  appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
-//  SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
-//  AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-//  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
-//  OF THIS SOFTWARE.
-//
 
-import CwlViews
+import UIKit
 
 struct SplitState: StateContainer {
 	let table: TableState
 	let detail: Var<DetailState?>
 	let select: Var<SelectState?>
-	let splitButton = TempVar<BarButtonItemInstance?>()
+	let splitButton = TempVar<BarButtonItemConvertible?>()
 	
 	init() {
 		table = TableState()
@@ -33,7 +22,7 @@ struct SplitState: StateContainer {
 	var childValues: [StateContainer] { return [table, detail, select] }
 }
 
-func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerInstance {
+func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConvertible {
 	return SplitViewController(
 		.preferredDisplayMode -- .allVisible,
 		.displayModeButton --> split.splitButton,
@@ -43,8 +32,8 @@ func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCon
 		.shouldShowSecondary <-- split.detail.map {
 			$0 != nil
 		},
-		.modalPresentation <-- split.select.modalPresentation {
-			selectViewController($0, split, doc)
+		.present <-- split.select.modalPresentation { select in
+			selectViewController(select, split, doc)
 		},
 		.cancelOnClose -- [
 			split.detail
@@ -60,14 +49,14 @@ func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCon
 	)
 }
 
-fileprivate  func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerInstance {
+private func primaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationController {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack -- [masterViewController(split, doc)]
 	)
 }
 
-fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationControllerInstance {
+private func secondaryViewController(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationController {
 	return NavigationController(
 		.navigationBar -- navBar(),
 		.stack <-- split.detail
@@ -79,7 +68,7 @@ fileprivate  func secondaryViewController(_ split: SplitState, _ doc: DocumentAd
 	)
 }
 
-fileprivate func navBar() -> NavigationBar {
+private func navBar() -> NavigationBar {
 	return NavigationBar(
 		.isTranslucent -- false,
 		.barTintColor -- .barTint,
@@ -88,7 +77,7 @@ fileprivate func navBar() -> NavigationBar {
 	)
 }
 
-fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControllerInstance {
+private func emptyDetailViewController(_ split: SplitState) -> ViewController {
 	return ViewController(
 		.view -- View(
 			.backgroundColor -- UIColor(white: 0.95, alpha: 1.0),
@@ -99,7 +88,7 @@ fileprivate func emptyDetailViewController(_ split: SplitState) -> ViewControlle
 			)
 		),
 		.navigationItem -- NavigationItem(
-			.leftBarButtonItems <-- split.splitButton.optionalToArray().animate(.none)
+			.leftBarButtonItems() <-- split.splitButton.optionalToArray()
 		)
 	)
 }

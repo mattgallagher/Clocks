@@ -17,24 +17,22 @@
 //  OF THIS SOFTWARE.
 //
 
-import CwlViews
+import UIKit
 
 struct TableState: StateContainer {
 	let isEditing: Var<Bool>
 	let visibleRows: Var<CodableRange>
-	let firstRow: Var<IndexPath?>
 	let selection: TempVar<TableRow<Row>>
 
 	init() {
 		isEditing = Var(false)
 		visibleRows = Var(CodableRange([]))
 		selection = TempVar()
-		firstRow = Var(nil)
 	}
 	var childValues: [StateContainer] { return [isEditing, visibleRows] }
 }
 
-func masterViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConstructor {
+func masterViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewControllerConvertible {
 	return ViewController(
 		.navigationItem -- navItem(split, doc),
 		.view -- TableView<Row>(
@@ -48,19 +46,16 @@ func masterViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCo
 			.tableData <-- doc
 				.rowsSignal(visibleRows: split.table.visibleRows.signal)
 				.tableData(),
-			.visibleRowsChanged --> Input().multicast(
-				updateFirstRow(split.table.firstRow),
-				Input()
-					.map { CodableRange($0.map { $0.indexPath.row }) }
-					.distinctUntilChanged()
-					.bind(to: split.table.visibleRows)
-			),
-			.scrollToRow <-- split.table.firstRow.filterMap { $0.map { .none($0) } }.animate(.none),
+			.visibleRowsChanged --> Input()
+				.map { CodableRange($0.map { $0.indexPath.row }) }
+				.distinctUntilChanged()
+				.bind(to: split.table.visibleRows),
+			.scrollToRow <-- split.table.visibleRows.map { .none($0.last) }.animate(),
 
 			.didSelectRow --> Input().multicast(
 				Input().bind(to: split.table.selection),
 				Input()
-					.filterMap { $0.data.map { DetailState(uuid: $0.timezone.uuid) } }
+					.compactMap { $0.data.map { DetailState(uuid: $0.timezone.uuid) } }
 					.bind(to: split.detail)
 			),
 			.deselectRow <-- split.table.selection
@@ -69,14 +64,14 @@ func masterViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCo
 
 			.isEditing <-- split.table.isEditing.animate(),
 			.commit --> Input()
-				.filterMap { $0.row.data }
+				.compactMap { $0.row.data }
 				.map { .remove($0.timezone.uuid) }
 				.bind(to: doc)
 		)
 	)
 }
 
-fileprivate func tableCell(_ row: Signal<Row>) -> TableViewCellConstructor {
+fileprivate func tableCell(_ row: Signal<Row>) -> TableViewCell {
 	return TableViewCell(
 		.contentView -- View(
 			.layout -- .horizontal(
@@ -97,18 +92,19 @@ fileprivate func tableCell(_ row: Signal<Row>) -> TableViewCellConstructor {
 fileprivate func navItem(_ split: SplitState, _ doc: DocumentAdapter) -> NavigationItem {
 	return NavigationItem(
 		.title -- .clocks,
-		.leftBarButtonItems <-- split.table.isEditing.map { e in
-			[BarButtonItem(
-				.barButtonSystemItem -- e ? .done : .edit,
-				.action --> Input()
-					.map { !e }
-					.bind(to: split.table.isEditing)
-			)]
-		}.animate(),
+		.leftBarButtonItems() <-- split.table.isEditing
+			.map { e in
+				[BarButtonItem(
+					.barButtonSystemItem -- e ? .done : .edit,
+					.action --> Input()
+						.map { _ in !e }
+						.bind(to: split.table.isEditing)
+				)]
+			},
 		.rightBarButtonItems -- .set([BarButtonItem(
 			.barButtonSystemItem -- .add,
 			.action --> Input()
-				.map { SelectState() }
+				.map { _ in SelectState() }
 				.bind(to: split.select)
 		)])
 	)

@@ -17,25 +17,26 @@
 //  OF THIS SOFTWARE.
 //
 
-import CwlViews
+import UIKit
 
-class TimeDisplay: ViewInstance {
-	var state: BinderState<UIView, Signal<Row>>
+class TimeDisplay: ViewConvertible {
+	var state: AdhocBinderState<UIView, View.Binding, Signal<Row>>
 	init(row: Signal<Row>) {
-		self.state = .pending(row)
+		self.state = AdhocBinderState.pending(.init(additional: row))
 	}
-	public func view() -> Layout.View {
-		return state.construct { row in
+	
+	func uiView() -> Layout.View {
+		return state.construct { parameters in
 			let v = View(subclass: TimeDisplayView.self, .backgroundColor -- .clear)
-			let b = row.adhocBinding(toType: TimeDisplayView.self) {
-				$0.components = $1.current
+			let b = parameters.additional.adhocBinding(toType: TimeDisplayView.self) { timeDisplayView, row in
+				timeDisplayView.components = row.current
 			}
 			return v.instance(additional: b)
 		}
 	}
 }
 
-fileprivate class TimeDisplayView: UIView {
+private class TimeDisplayView: UIView {
 	var components: DateComponents { didSet { setNeedsDisplay() } }
 	
 	override init(frame: CGRect) {
