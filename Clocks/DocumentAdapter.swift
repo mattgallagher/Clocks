@@ -80,9 +80,7 @@ struct DocumentAdapter: SignalInputInterface {
 				}
 			}
 			.map { UpdateReason.data($0) }
-		let timeChangeSignal = visibleRows
-			.map { UpdateReason.time($0) }
-			.sample(Signal.interval(.seconds(1)))
+		let timeChangeSignal = Signal.interval(.seconds(1)).withLatestFrom(visibleRows).map(UpdateReason.time)
 		return dataChangeSignal.mergeWith(timeChangeSignal).transformValues(initialState: Array<Timezone>()) { (array: inout Array<Timezone>, message: UpdateReason, next: SignalNext<ArrayMutation<Row>>) in
 			switch message {
 			case .data(let mutation):
