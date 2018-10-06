@@ -24,8 +24,8 @@ class KeyboardSizedView: UIView {
 
 	override func didMoveToSuperview() {
 		if superview != nil {
-			NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-			NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
 		} else {
 			NotificationCenter.default.removeObserver(self)
 		}
@@ -33,8 +33,8 @@ class KeyboardSizedView: UIView {
 
 	@objc func keyboardChanged(_ notification: Notification) {
 		let rect: CGRect
-		if notification.name == NSNotification.Name.UIKeyboardWillShow {
-			rect = convert((notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue, from: nil)
+		if notification.name == UIResponder.keyboardWillShowNotification {
+			rect = convert((notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue, from: nil)
 		} else {
 			rect = CGRect.zero
 		}

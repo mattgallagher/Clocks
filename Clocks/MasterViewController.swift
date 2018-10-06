@@ -141,7 +141,7 @@ class MasterViewController: UITableViewController {
 		return true
 	}
 	
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		Document.shared.removeTimezone(sortedTimezones[indexPath.row].uuid)
 	}
 	

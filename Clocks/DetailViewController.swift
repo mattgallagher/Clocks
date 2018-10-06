@@ -51,7 +51,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 		
 		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nameField!)
+		NotificationCenter.default.addObserver(self, selector: #selector(textChanged(_:)), name: UITextField.textDidChangeNotification, object: nameField!)
 		observations += ViewState.shared.addObserver(actionType: SplitViewState.Action.self) { [weak self] state, action in
 			guard let s = self else { return }
 			s.state = state.detailView
@@ -63,13 +63,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 			s.updateAll()
 		}
 		
-		self.applyLayout(
-			.vertical(
-				align: .center,
-				.sizedView(timeView!, LayoutSize(
-					length: .equalTo(constant: 300, priority: LayoutDimension.PriorityDefaultMid),
-					breadth: (.equalTo(ratio: 1.0), relativeToLength: true)
-				)),
+		view.applyLayout(
+			.vertical(align: .center,
+				.view(
+					length: .equalTo(constant: 300, priority: .userMid),
+					breadth: .equalTo(ratio: 1.0),
+					relative: true,
+					timeView!
+				),
 				.horizontal(
 					.view(hoursLabel),
 					.view(UILabel.timeFontLabel(text: ":")),
@@ -77,10 +78,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 					.view(UILabel.timeFontLabel(text: ":")),
 					.view(secondsLabel)
 				),
-				.interViewSpace,
+				.space(),
 				.view(nameField!),
-				.interViewSpace,
-				.sizedView(keyboardSpacer, .fillRemainingLength)
+				.space(),
+				.view(length: .fillRemaining, keyboardSpacer)
 			)
 		)
 		

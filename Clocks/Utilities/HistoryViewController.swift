@@ -102,35 +102,35 @@ class HistoryViewController: UIViewController {
 		setWindowFrame(twoSliders: bothSliders)
 		if !bothSliders {
 			view.applyLayout(.vertical(marginEdges: .none,
-				.interViewSpace,
+				.space(),
 				.horizontal(
 					.space(20),
 					.view(checkbox),
-					.interViewSpace,
+					.space(),
 					.view(slider),
-					.interViewSpace,
-					.sizedView(label, .lengthGreaterThanOrEqualTo(constant: 50)),
+					.space(),
+					.view(length: .greaterThanOrEqualTo(constant: 50), label),
 					.space(20)
 				),
-				.interViewSpace
+				.space()
 			))
 		} else {
 			view.applyLayout(.vertical(
 				marginEdges: .none,
-				.interViewSpace,
+				.space(),
 				.horizontal(
 					align: .center,
 					.space(20),
 					.view(checkbox),
-					.interViewSpace,
+					.space(),
 					.vertical(
-						.horizontal(.view(secondSlider), .interViewSpace, .sizedView(secondLabel, .lengthGreaterThanOrEqualTo(constant: 50))),
-						.interViewSpace,
-						.horizontal(.view(slider), .interViewSpace, .sizedView(label, .lengthGreaterThanOrEqualTo(constant: 50)))
+						.horizontal(.view(secondSlider), .space(), .view(length: .greaterThanOrEqualTo(constant: 50), secondLabel)),
+						.space(),
+						.horizontal(.view(slider), .space(), .view(length: .greaterThanOrEqualTo(constant: 50), label))
 					),
 					.space(20)
 				),
-				.interViewSpace
+				.space()
 			))
 		}
 	}
@@ -164,7 +164,7 @@ class HistoryViewController: UIViewController {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: nil, object: Document.shared)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: nil, object: ViewState.shared)
-		NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
 
 		updateDisplay(userAction: false)
 	}
