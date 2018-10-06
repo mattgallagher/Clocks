@@ -132,7 +132,7 @@ class MasterViewController: UITableViewController, UIDataSourceModelAssociation 
 		return true
 	}
 
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			Document.shared.removeTimezone(sortedTimezones[indexPath.row].uuid)
 		} else if editingStyle == .insert {
