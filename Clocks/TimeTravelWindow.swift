@@ -40,7 +40,7 @@ struct TimeTravelState {
 					return tuple.offset != Int(newOffset) ? Int(newOffset) : nil
 				}
 			}
-			.compactOptionals()
+			.compact()
 			.subscribeValuesUntilEnd { [offset] v -> () in offset.input.send(value: v) }
 	}
 	
@@ -49,7 +49,7 @@ struct TimeTravelState {
 			.map { _ in viewState.peekData() ?? Data() }
 			.combineLatest(doc.stateSignal.data()) { Element(viewStateSnapshot: $0, docSnapshot: $1) }
 			.withLatestFrom(offset) { state, offset in offset < 0 ? state : nil }
-			.compactOptionals()
+			.compact()
 			.cancellableBind(to: history.pushInput)
 	}
 	
@@ -58,7 +58,7 @@ struct TimeTravelState {
 			.distinctUntilChanged()
 			.filter { $0 > 0 }
 			.withLatestFrom(history.stateSignal) { offset, state in state.at(offset - 1) }
-			.compactOptionals()
+			.compact()
 			.subscribeValues {
 				if let vs = try? JSONDecoder().decode(SplitState.self, from: $0.viewStateSnapshot) {
 					viewState.input.send(value: vs)
@@ -104,7 +104,7 @@ func timeTravelWindow(_ doc: DocumentAdapter, _ viewState: Var<SplitState>) -> W
 				)
 			)
 		),
-		.cancelOnClose -- [
+		.lifetimes -- [
 			doc.stateSignal.logJson(prefix: "\nDocument changed: "),
 			viewState.logJson(prefix: "\nView state changed: "),
 			state.saveHistory(viewState, doc),

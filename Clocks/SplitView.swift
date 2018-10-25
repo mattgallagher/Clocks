@@ -35,7 +35,7 @@ func splitViewController(_ split: SplitState, _ doc: DocumentAdapter) -> ViewCon
 		.present <-- split.select.modalPresentation { select in
 			selectViewController(select, split, doc)
 		},
-		.cancelOnClose -- [
+		.lifetimes -- [
 			split.detail
 				.flatMapLatest { possible -> Signal<DetailState?> in
 					if let uuid = possible?.uuid {

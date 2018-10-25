@@ -20,15 +20,14 @@
 import UIKit
 
 class TimeDisplay: ViewConvertible {
-	var state: AdhocBinderState<UIView, View.Binding, Signal<Row>>
+	var state: BinderState<UIView, Signal<Row>>
 	init(row: Signal<Row>) {
-		self.state = AdhocBinderState.pending(.init(additional: row))
+		self.state = .pending(row)
 	}
-	
 	func uiView() -> Layout.View {
-		return state.construct { parameters in
+		return state.construct { row in
 			let v = View(subclass: TimeDisplayView.self, .backgroundColor -- .clear)
-			let b = parameters.additional.adhocBinding(toType: TimeDisplayView.self) { timeDisplayView, row in
+			let b = row.adhocBinding(toType: TimeDisplayView.self) { timeDisplayView, row in
 				timeDisplayView.components = row.current
 			}
 			return v.instance(additional: b)
